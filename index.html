@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sell Your Car — Exotic Motors Midwest</title>
+<meta name="description" content="Sell your Porsche, Mercedes-AMG, BMW M or exotic to Exotic Motors Midwest. Tell us about your car and get an offer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/tdf.jpg">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --bg:#0B0C0E;
+  --surface:#131518;
+  --surface-2:#1A1D21;
+  --line:rgba(255,255,255,.10);
+  --line-strong:rgba(255,255,255,.20);
+  --text:#F3F3F1;
+  --muted:#A4A8AE;
+  --faint:#80858D;
+  --red:#EB0014;            /* from the EM badge / current site */
+  --red-press:#C40011;
+  --chrome:linear-gradient(180deg,#FFFFFF 0%,#D9DCE0 38%,#8A9098 52%,#E6E8EB 70%,#B9BDC3 100%);
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;--s9:96px;--s10:128px;--s11:160px;
+  --radius:2px;
+  --gutter:clamp(20px,6vw,120px);
+  --max:1240px;
+
+  --f:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-small:14px;--t-body:16px;--t-lead:18px;--t-h3:22px;
+  --t-h2:clamp(32px,3.6vw,48px);
+  --t-h1:clamp(40px,5.6vw,80px);
+
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --dur:220ms;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:var(--s9)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f);font-size:var(--t-body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--text);outline-offset:3px}
+
+.wrap{width:100%;max-width:calc(var(--max) + var(--gutter)*2);margin-inline:auto;padding-inline:var(--gutter)}
+
+/* type roles — one family, two voices: expanded display, normal-width text */
+.display{font-stretch:115%;font-weight:600;letter-spacing:-.015em;line-height:1.02;margin:0;text-wrap:balance}
+.h2{font-size:var(--t-h2)}
+.label{font-size:var(--t-small);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:var(--s3);margin:0 0 var(--s5)}
+.label::before{content:"";width:24px;height:2px;background:var(--red)}
+.lead{font-size:var(--t-lead);color:var(--muted);max-width:56ch;margin:0}
+.ph{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#1a1a1a;background:#E8C547;padding:2px 8px;border-radius:var(--radius);vertical-align:middle}
+
+/* buttons */
+.btn{--h:56px;display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);height:var(--h);padding:0 var(--s6);border:0;border-radius:var(--radius);font:600 15px/1 var(--f);font-stretch:112%;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-press)}
+.btn-red .arrow{transition:transform var(--dur) var(--ease)}
+.btn-red:hover .arrow{transform:translateX(4px)}
+.btn-line{background:transparent;color:var(--text);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--text)}
+
+/* ---------- header ---------- */
+.top{position:absolute;inset:0 0 auto;z-index:5}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:96px}
+.brand{display:block;width:clamp(200px,20vw,260px)}
+.brand img{width:100%;height:auto}
+.top nav{display:flex;align-items:center;gap:var(--s6)}
+.top nav a{font-size:var(--t-small);font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);transition:color var(--dur) var(--ease)}
+.top nav a:hover{color:var(--text)}
+.top .tel{color:var(--text);font-weight:600;letter-spacing:.02em;text-transform:none;font-size:15px;padding-left:var(--s6);border-left:1px solid var(--line-strong)}
+.top .tel:hover{color:var(--text);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--red)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:clamp(860px,64vw,1100px);background:#060607;isolation:isolate}
+/* the studio plate sits on the hero floor; the dark above it is the reading zone */
+.hero-img{position:absolute;left:50%;bottom:0;width:min(100%,1680px);transform:translateX(-50%);z-index:-1;overflow:hidden}
+@media (min-width:1681px){.hero-img{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}}
+.hero-img img{width:100%;height:auto;aspect-ratio:2400/1564;object-fit:cover;object-position:50% 70%}
+.hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#060607 0%,rgba(6,6,7,.35) 14%,rgba(6,6,7,0) 30%,rgba(6,6,7,0) 66%,rgba(6,6,7,.8) 100%)}
+.hero-copy{padding-top:clamp(120px,9vw,168px)}
+.hero h1{font-size:var(--t-h1);max-width:14ch}
+.hero h1 em{font-style:normal;color:transparent;background:var(--chrome);-webkit-background-clip:text;background-clip:text}
+.hero .lead{margin-top:var(--s5);max-width:46ch;color:#C3C6CB}
+
+/* offer bar — the form, docked on the studio floor */
+.offer{position:absolute;left:0;right:0;bottom:clamp(32px,4vw,56px)}
+.offer-card{background:rgba(16,17,20,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);border-top-color:var(--line-strong);border-radius:var(--radius);padding:var(--s5)}
+.offer-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s5);margin-bottom:var(--s4)}
+.offer-head h2{font-size:var(--t-h3);font-stretch:115%;font-weight:600;margin:0}
+.offer-head p{margin:0;font-size:var(--t-small);color:var(--muted)}
+.offer-head a{color:var(--text);text-decoration-color:var(--red);text-underline-offset:3px}
+.fields{display:grid;grid-template-columns:.8fr 1fr 1fr .9fr 1.3fr auto;gap:var(--s2)}
+.field{position:relative}
+.field label{position:absolute;left:14px;top:8px;font-size:14px;font-weight:500;letter-spacing:.01em;color:var(--faint);pointer-events:none}
+.field label span{font-weight:400}
+.field input,.field select{width:100%;height:60px;padding:28px 14px 8px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);color:var(--text);font:500 16px/1 var(--f);appearance:none;-webkit-appearance:none;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 28px,calc(100% - 13px) 28px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.field select:invalid{color:var(--faint)}
+.field option{background:var(--surface-2);color:var(--text)}
+.field input::placeholder{color:#5F646B}
+.field input:hover,.field select:hover{border-color:var(--line-strong)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--text);background:#202328}
+.field input:user-invalid,.field select:user-invalid{border-color:var(--red)}
+.fields .btn{height:60px;white-space:nowrap}
+.offer-done{display:none;align-items:center;justify-content:space-between;gap:var(--s5);min-height:56px}
+.offer-done p{margin:0;color:var(--muted)}
+.offer-done strong{color:var(--text);font-weight:600}
+.offer.is-done .fields{display:none}
+.offer.is-done .offer-done{display:flex}
+
+/* ---------- sections ---------- */
+section{position:relative}
+.sec{padding-block:clamp(88px,10vw,160px)}
+.sec + .sec{border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s7);align-items:end;margin-bottom:clamp(48px,5vw,80px)}
+.sec-head .lead{justify-self:end}
+
+/* how it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-strong)}
+.step{padding:var(--s6) var(--s6) 0 0}
+.step + .step{padding-left:var(--s6);border-left:1px solid var(--line)}
+.step .n{font-size:clamp(56px,6vw,88px);font-stretch:125%;font-weight:700;line-height:1;color:transparent;background:var(--chrome);-webkit-background-clip:text;background-clip:text;margin-bottom:var(--s6)}
+.step h3{font-size:var(--t-h3);font-weight:600;font-stretch:110%;margin:0 0 var(--s3);line-height:1.2}
+.step p{margin:0;color:var(--muted);max-width:34ch}
+
+/* what we buy */
+.buy{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px,6vw,96px);align-items:start}
+.buy-list{list-style:none;margin:var(--s6) 0 0;padding:0;border-top:1px solid var(--line-strong)}
+.buy-list li{border-bottom:1px solid var(--line)}
+.buy-list button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:1fr auto;align-items:center;gap:var(--s4);padding:var(--s5) 0;cursor:pointer}
+.buy-list .name{font-size:clamp(22px,2.2vw,30px);font-stretch:115%;font-weight:600;line-height:1.15;transition:color var(--dur) var(--ease)}
+.buy-list .sub{grid-column:1;font-size:var(--t-small);color:var(--faint);margin-top:-8px}
+.buy-list .go{grid-row:1/span 2;grid-column:2;font-size:var(--t-small);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:var(--s2);transition:color var(--dur) var(--ease)}
+.buy-list .go i{display:block;width:24px;height:2px;background:currentColor;transition:width var(--dur) var(--ease),background var(--dur) var(--ease)}
+.buy-list button:hover .go,.buy-list button:focus-visible .go{color:var(--text)}
+.buy-list button:hover .go i,.buy-list button:focus-visible .go i{width:40px;background:var(--red)}
+.buy-note{margin:var(--s5) 0 0;color:var(--muted);font-size:var(--t-small)}
+.buy-fig{margin:0;position:sticky;top:var(--s7);display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.buy-fig img{width:100%;object-fit:cover;border-radius:var(--radius)}
+.buy-fig .m{grid-column:1/-1;aspect-ratio:16/10;object-position:50% 62%}
+.buy-fig .s1{aspect-ratio:4/3;object-position:44% 70%}
+.buy-fig .s2{aspect-ratio:4/3;object-position:36% 72%}
+.buy-fig figcaption{grid-column:1/-1;font-size:14px;color:var(--faint);padding-top:var(--s1)}
+
+/* why us */
+.why{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:clamp(40px,6vw,96px);align-items:center}
+.why-fig{margin:0;display:grid;grid-template-columns:3fr 2fr;gap:var(--s2)}
+.why-fig img{width:100%;object-fit:cover;border-radius:var(--radius)}
+.why-fig .a{aspect-ratio:3/4;object-position:30% 50%}
+.why-fig .b{aspect-ratio:1/2;object-position:62% 50%} /* 3fr:2fr columns → equal heights */
+.why .lead{margin-top:var(--s5)}
+.pillars{display:grid;gap:0;margin:var(--s7) 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.pillars li{display:grid;grid-template-columns:180px 1fr;gap:var(--s5);padding:var(--s5) 0;border-bottom:1px solid var(--line)}
+.pillars b{font-weight:600;font-stretch:110%}
+.pillars span{color:var(--muted)}
+
+/* reviews */
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
+.review{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:var(--s6);display:flex;flex-direction:column;gap:var(--s5);margin:0}
+.review blockquote{margin:0;font-size:var(--t-lead);line-height:1.55}
+.review figcaption{margin-top:auto;font-size:var(--t-small);color:var(--faint)}
+.stars{display:flex;gap:4px}
+.stars svg{width:14px;height:14px;fill:var(--red)}
+
+/* recently purchased */
+.rail{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4)}
+.car{margin:0}
+.car img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius);background:var(--surface)}
+.car figcaption{display:flex;justify-content:space-between;gap:var(--s3);padding-top:var(--s3);font-size:var(--t-small)}
+.car figcaption b{font-weight:600}
+.car figcaption span{color:var(--faint)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(40px,6vw,96px)}
+.faq-list{border-top:1px solid var(--line-strong)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:var(--s5);padding:var(--s5) 0;font-size:var(--t-lead);font-weight:500;transition:color var(--dur) var(--ease)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:#fff}
+.faq summary .pm{position:relative;flex:none;width:14px;height:14px}
+.faq summary .pm::before,.faq summary .pm::after{content:"";position:absolute;left:0;top:6px;width:14px;height:2px;background:var(--muted);transition:transform var(--dur) var(--ease),background var(--dur) var(--ease)}
+.faq summary .pm::after{transform:rotate(90deg)}
+.faq summary:hover .pm::before,.faq summary:hover .pm::after{background:var(--red)}
+.faq details[open] summary .pm::after{transform:rotate(0)}
+.faq .a{padding:0 0 var(--s5);color:var(--muted);max-width:64ch}
+.faq .a p{margin:0 0 var(--s3)}
+
+/* final */
+.final{position:relative;isolation:isolate;overflow:hidden;padding-block:clamp(120px,14vw,220px);border-top:1px solid var(--line)}
+.final-img{position:absolute;top:0;bottom:0;right:0;width:66%;z-index:-1}
+.final-img img{width:100%;height:100%;object-fit:cover;object-position:72% 60%}
+.final-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,rgba(11,12,14,.6) 14%,rgba(11,12,14,0) 34%)}
+.final h2{font-size:clamp(40px,5vw,72px);max-width:12ch}
+.final .lead{margin-top:var(--s5);max-width:30ch;color:#C3C6CB}
+.final .acts{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s7)}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding-block:var(--s7)}
+.foot .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s5)}
+.foot img{width:200px;height:auto}
+.foot address{font-style:normal;color:var(--muted);font-size:var(--t-small);line-height:1.7;text-align:right}
+.foot address a{color:var(--text);text-decoration:none}
+.foot address a:hover{text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px}
+.legal{width:100%;display:flex;justify-content:space-between;gap:var(--s4);padding-top:var(--s5);margin-top:var(--s2);border-top:1px solid var(--line);font-size:14px;color:var(--faint)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .fields{grid-template-columns:repeat(5,minmax(0,1fr)) auto}
+  .fields .btn{padding:0 var(--s5)}
+  .rail{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:960px){
+  .top nav a:not(.tel){display:none}
+  .top .tel{border-left:0;padding-left:0}
+  /* hero recomposes: copy → plate → offer card in flow */
+  .hero{height:auto;background:var(--bg)}
+  .hero-img{position:relative;left:auto;width:auto;transform:none;z-index:0;margin-top:var(--s5)}
+  .hero-img img{aspect-ratio:16/10;object-position:50% 62%}
+  .hero-img::after{background:linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,0) 22%,rgba(11,12,14,0) 70%,var(--bg) 100%)}
+  .offer{position:relative;bottom:auto;margin-top:calc(var(--s7) * -1);z-index:1}
+  .offer-card{background:var(--surface)}
+  .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fields .btn{grid-column:1/-1}
+  .fields .field:nth-child(5){grid-column:1/-1}
+  .offer-head{flex-direction:column;gap:var(--s1)}
+  .sec-head{grid-template-columns:1fr;gap:var(--s5)}
+  .sec-head .lead{justify-self:start}
+  .steps{grid-template-columns:1fr}
+  .step,.step + .step{padding:var(--s6) 0;border-left:0}
+  .step + .step{border-top:1px solid var(--line)}
+  .step .n{margin-bottom:var(--s4)}
+  .buy,.why,.faq{grid-template-columns:1fr}
+  .buy-fig{position:static;order:-1}
+  .why-fig{order:-1}
+  .reviews{grid-template-columns:1fr}
+  .pillars li{grid-template-columns:1fr;gap:var(--s1)}
+  .final{padding-block:0 var(--s9)}
+  .final-img{position:relative;inset:auto;width:auto;z-index:0;margin-bottom:var(--s6)}
+  .final-img img{height:auto;aspect-ratio:16/10;object-position:62% 60%}
+  .final-img::after{background:linear-gradient(180deg,rgba(11,12,14,0) 60%,var(--bg) 100%)}
+  .foot address{text-align:left}
+}
+@media (max-width:560px){
+  .top .wrap{height:80px}
+  .brand{width:180px}
+  .top .tel{font-size:14px}
+  .hero-copy{padding-top:112px}
+  .hero-img img{aspect-ratio:4/3}
+  .offer-card{padding:var(--s4)}
+  .rail{grid-template-columns:1fr 1fr;gap:var(--s3)}
+  .car figcaption{flex-direction:column;gap:0}
+  .buy-list .go{font-size:0;gap:0}
+  .buy-list .go i{width:32px}
+  .why-fig{grid-template-columns:1fr}
+  .why-fig .b{display:none}
+  .why-fig .a{aspect-ratio:4/3}
+  .final .acts .btn{width:100%}
+  .legal{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:0s!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Exotic Motors Midwest"><img src="assets/logo-light.png" alt="Exotic Motors Midwest" width="1257" height="269"></a>
+    <nav aria-label="Page">
+      <a href="#how">How it works</a>
+      <a href="#buy">What we buy</a>
+      <a href="#faq">FAQ</a>
+      <a class="tel" href="tel:+18166088579">(816) 608-8579</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="h1">
+    <div class="wrap hero-copy">
+      <h1 id="h1" class="display">Sell your Porsche, <em>AMG</em> or&nbsp;M.</h1>
+      <p class="lead">Exotic Motors Midwest buys enthusiast and luxury cars — from a weekend 911 to a garage-kept Ferrari. Tell us what you drive and we'll come back with an offer.</p>
+    </div>
+    <div class="hero-img"><img src="assets/tdf.jpg" alt="Grey Ferrari F12tdf in profile in a dark concrete studio" width="2400" height="1564"></div>
+
+    <div class="offer" id="offer">
+      <div class="wrap">
+        <form class="offer-card" novalidate>
+          <div class="offer-head">
+            <h2>Get your offer</h2>
+            <p>Takes a minute. Prefer to talk? <a href="tel:+18166088579">(816) 608-8579</a></p>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label for="f-year">Year</label>
+              <select id="f-year" name="year" required><option value="" selected disabled hidden></option></select>
+            </div>
+            <div class="field">
+              <label for="f-make">Make</label>
+              <input id="f-make" name="make" list="makes" autocomplete="off" required>
+              <datalist id="makes">
+                <option value="Porsche"><option value="Mercedes-AMG"><option value="Mercedes-Benz"><option value="BMW M"><option value="BMW"><option value="Audi"><option value="Ferrari"><option value="Lamborghini"><option value="McLaren"><option value="Bentley"><option value="Rolls-Royce"><option value="Aston Martin"><option value="Land Rover">
+              </datalist>
+            </div>
+            <div class="field">
+              <label for="f-model">Model</label>
+              <input id="f-model" name="model" autocomplete="off" required>
+            </div>
+            <div class="field">
+              <label for="f-miles">Mileage</label>
+              <input id="f-miles" name="mileage" inputmode="numeric" required>
+            </div>
+            <div class="field">
+              <label for="f-vin">VIN <span>(optional)</span></label>
+              <input id="f-vin" name="vin" maxlength="17" autocomplete="off" spellcheck="false">
+            </div>
+            <button class="btn btn-red" type="submit">Get my offer <span class="arrow" aria-hidden="true">→</span></button>
+          </div>
+          <div class="offer-done" role="status">
+            <p><strong>Thanks — we have your car.</strong> A specialist will be in touch with next steps.</p>
+            <button class="btn btn-line" type="button" data-reset>Add another car</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">How it works</p>
+          <h2 id="how-h" class="display h2">Three steps. No listing, no strangers.</h2>
+        </div>
+        <p class="lead">You deal with one team from the first message to the final signature.</p>
+      </div>
+      <ol class="steps" role="list" style="list-style:none;margin:0;padding:0">
+        <li class="step">
+          <div class="n" aria-hidden="true">01</div>
+          <h3>Tell us about your car</h3>
+          <p>Year, make, model and mileage. Add the VIN, options and photos if you have them — the more we know, the sharper the offer.</p>
+        </li>
+        <li class="step">
+          <div class="n" aria-hidden="true">02</div>
+          <h3>We review and make an offer</h3>
+          <p>A specialist looks at your car against the current market and calls you to talk it through.</p>
+        </li>
+        <li class="step">
+          <div class="n" aria-hidden="true">03</div>
+          <h3>Agree, sign, get paid</h3>
+          <p>If the number works for you, we inspect the car, handle the paperwork with you and complete the sale.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="buy" aria-labelledby="buy-h">
+    <div class="wrap buy">
+      <div>
+        <p class="label">What we buy</p>
+        <h2 id="buy-h" class="display h2">German performance to Italian exotics.</h2>
+        <ul class="buy-list">
+          <li><button type="button" data-make="Porsche"><span class="name">Porsche 911 &amp; GT</span><span class="sub">Carrera, Turbo, GT3, GT4 — and Cayenne, Macan</span><span class="go">Get an offer <i></i></span></button></li>
+          <li><button type="button" data-make="Mercedes-AMG"><span class="name">Mercedes-AMG</span><span class="sub">C 63, E 63, GT, S-Class AMG</span><span class="go">Get an offer <i></i></span></button></li>
+          <li><button type="button" data-make="BMW M"><span class="name">BMW M</span><span class="sub">M2, M3, M4, M5, X5 M, X6 M</span><span class="go">Get an offer <i></i></span></button></li>
+          <li><button type="button" data-make="Mercedes-Benz" data-model="G-Class"><span class="name">G-Wagon &amp; luxury SUV</span><span class="sub">G 550, G 63, Range Rover, Urus</span><span class="go">Get an offer <i></i></span></button></li>
+          <li><button type="button" data-make="Ferrari"><span class="name">Exotic &amp; collector</span><span class="sub">Ferrari, Lamborghini, McLaren, Bentley</span><span class="go">Get an offer <i></i></span></button></li>
+        </ul>
+        <p class="buy-note">Don't see your car? Send it anyway — if it's interesting, we want to hear about it.</p>
+      </div>
+      <figure class="buy-fig">
+        <img class="m" src="assets/gen-911.jpg" alt="Red Porsche 911 in a dark concrete studio" width="1800" height="1208" loading="lazy">
+        <img class="s1" src="assets/gen-amg.jpg" alt="Graphite Mercedes-AMG GT in a dark concrete studio" width="1800" height="1051" loading="lazy">
+        <img class="s2" src="assets/16m.jpg" alt="White Ferrari 430 Scuderia Spider 16M against a red studio wall" width="2000" height="1333" loading="lazy">
+        <figcaption>Porsche and AMG images are generated artwork, shown for illustration.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="why-h">
+    <div class="wrap why">
+      <figure class="why-fig">
+        <img class="a" src="assets/speciale-detail.jpg" alt="Rear light and carbon diffuser of a silver Ferrari 458 Speciale A" width="1600" height="1067" loading="lazy">
+        <img class="b" src="assets/tdf-interior.jpg" alt="Ferrari F12tdf cockpit" width="1600" height="1067" loading="lazy">
+      </figure>
+      <div>
+        <p class="label">Why Exotic Motors Midwest</p>
+        <h2 id="why-h" class="display h2">Sold to people who know the car.</h2>
+        <p class="lead">Led by Danny Baker, with more than 20 years in the exotic and collector car trade. We know what makes one example worth more than the next — originality, history, specification — and we price it that way.</p>
+        <ul class="pillars">
+          <li><b>Specialist eyes</b><span>Your car is valued by people who buy and sell cars like it, not by a trade-in formula.</span></li>
+          <li><b>Two ways to sell</b><span>Sell outright, or consign it with us — boutique showroom, 24/7 security and climate control, commission agreed up front.</span></li>
+          <li><b>One point of contact</b><span>The same person from first call to final paperwork.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="rev-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">Sellers on us</p>
+          <h2 id="rev-h" class="display h2">What sellers say.</h2>
+        </div>
+        <p class="lead"><span class="ph">Placeholder</span>&nbsp; Replace with real Google reviews before launch.</p>
+      </div>
+      <div class="reviews">
+        <figure class="review">
+          <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg></div>
+          <blockquote>Sample review text. A short, specific quote from a seller about the offer, the process and how they were treated.</blockquote>
+          <figcaption>Reviewer name · Car sold</figcaption>
+        </figure>
+        <figure class="review">
+          <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg></div>
+          <blockquote>Sample review text. Two or three lines works best here — long reviews get trimmed to the strongest sentence.</blockquote>
+          <figcaption>Reviewer name · Car sold</figcaption>
+        </figure>
+        <figure class="review">
+          <div class="stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1l2.7 6 6.3.6-4.8 4.2 1.4 6.2L10 14.8 4.4 18l1.4-6.2L1 7.6 7.3 7z"/></svg></div>
+          <blockquote>Sample review text. Ideally one review each from a Porsche, an AMG or M, and an exotic seller.</blockquote>
+          <figcaption>Reviewer name · Car sold</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="rec-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label">Recently purchased</p>
+          <h2 id="rec-h" class="display h2">Cars we've bought.</h2>
+        </div>
+        <p class="lead"><span class="ph">Placeholder</span>&nbsp; Photos from the dealer's library — swap in real acquisitions.</p>
+      </div>
+      <div class="rail">
+        <figure class="car"><img src="assets/scuderia-spider.jpg" alt="Red Ferrari 430 Scuderia Spider 16M in profile" width="1200" height="800" loading="lazy"><figcaption><b>Ferrari 430 Scuderia Spider 16M</b><span>Year · Miles</span></figcaption></figure>
+        <figure class="car"><img src="assets/huracan.jpg" alt="Matte white Lamborghini Huracán, front view" width="1200" height="800" loading="lazy"><figcaption><b>Lamborghini Huracán</b><span>Year · Miles</span></figcaption></figure>
+        <figure class="car"><img src="assets/488.jpg" alt="Black Ferrari 488, front three-quarter" width="1200" height="800" loading="lazy"><figcaption><b>Ferrari 488</b><span>Year · Miles</span></figcaption></figure>
+        <figure class="car"><img src="assets/bentley.jpg" alt="White Bentley Continental GT Supersports" width="1200" height="800" loading="lazy"><figcaption><b>Bentley Continental GT</b><span>Year · Miles</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq" aria-labelledby="faq-h">
+    <div class="wrap faq">
+      <div>
+        <p class="label">FAQ</p>
+        <h2 id="faq-h" class="display h2">Questions sellers ask.</h2>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>What are the steps to sell my car? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Fill out the form with your car's details — photos and the original window sticker help if you have them. A specialist reviews it and calls you with an offer. If you accept, we arrange the inspection and complete the paperwork together.</p></div>
+        </details>
+        <details>
+          <summary>What information gives the most accurate offer? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>The VIN, current mileage, options and packages, service history, any paint or bodywork, and clear photos of the exterior, interior and wheels.</p></div>
+        </details>
+        <details>
+          <summary>How quickly do I get paid? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Placeholder answer — confirm the dealer's payment timing before launch.</p></div>
+        </details>
+        <details>
+          <summary>What if my car is leased or financed? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Placeholder answer — confirm how the dealer handles payoffs and lease buyouts before launch.</p></div>
+        </details>
+        <details>
+          <summary>Do you only buy exotics? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>No. We buy Porsche, Mercedes-AMG, BMW M, G-Wagons and other luxury and performance cars, as well as exotics and collector cars.</p></div>
+        </details>
+        <details>
+          <summary>Can I consign instead of selling outright? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Yes. We handle marketing, showing and negotiation, and your car is kept in our showroom with 24/7 security and climate control. Our commission is agreed up front and deducted at the sale.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="fin-h">
+    <div class="final-img"><img src="assets/speciale.jpg" alt="" width="2000" height="1267" loading="lazy"></div>
+    <div class="wrap">
+      <h2 id="fin-h" class="display">Ready when you&nbsp;are.</h2>
+      <p class="lead">Tell us about your car and a specialist will take it from there.</p>
+      <div class="acts">
+        <a class="btn btn-red" href="#offer" data-focus>Get my offer <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn-line" href="tel:+18166088579">Call (816) 608-8579</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <img src="assets/logo-light.png" alt="Exotic Motors Midwest" width="1257" height="269" loading="lazy">
+    <address>
+      Exotic Motors Midwest, LLC<br>
+      1 E 135th Street, Kansas City, MO 64145<br>
+      <a href="tel:+18166088579">(816) 608-8579</a>
+    </address>
+    <div class="legal"><span>© 2026 Exotic Motors Midwest, LLC</span><span>Powered by All Auto Network</span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const form = document.querySelector('.offer-card');
+  const offer = document.getElementById('offer');
+  const year = document.getElementById('f-year');
+  const make = document.getElementById('f-make');
+  const model = document.getElementById('f-model');
+  const now = new Date().getFullYear() + 1;
+  for (let y = now; y >= 1960; y--) year.add(new Option(y, y));
+
+  const goToForm = (focusEl) => {
+    offer.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
+    setTimeout(() => focusEl.focus({preventScroll: true}), 450);
+  };
+
+  document.querySelectorAll('[data-make]').forEach(b => b.addEventListener('click', () => {
+    make.value = b.dataset.make;
+    model.value = b.dataset.model || '';
+    goToForm(year);
+  }));
+  document.querySelectorAll('[data-focus]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault(); goToForm(year);
+  }));
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const bad = [...form.querySelectorAll('[required]')].find(f => !f.value.trim());
+    if (bad) { form.querySelectorAll('[required]').forEach(f => f.reportValidity && !f.value.trim() && f.classList.add('touched')); bad.focus(); bad.reportValidity(); return; }
+    offer.classList.add('is-done');
+  });
+  form.querySelector('[data-reset]').addEventListener('click', () => {
+    form.reset(); offer.classList.remove('is-done'); year.focus();
+  });
+})();
+</script>
+</body>
+</html>

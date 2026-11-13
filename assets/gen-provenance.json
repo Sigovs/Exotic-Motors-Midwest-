@@ -1,0 +1,14 @@
+﻿{
+  "files": {
+    "gen-911.jpg": { "prompt_key": "emm-gen-911-v1", "fal_request_id": "01a1d68a-018e-7a62-9755-f80c94275572" },
+    "gen-amg.jpg": { "prompt_key": "emm-gen-amg-v1", "fal_request_id": "01a1d68a-01ac-79a2-835b-5915fff37865" }
+  },
+  "origin": "synthetic",
+  "model": "google/nano-banana-2.1 (fal.ai)",
+  "date": "2026-11-13",
+  "use": "Generic segment illustration in 'What we buy' only. NOT dealer stock - never place next to a price, listing or 'recently purchased'. Page carries a 'generated artwork' line.",
+  "prompts": {
+    "gen-911.jpg": "Professional automotive studio photograph of a modern Porsche 911 Carrera (992 generation) in Guards Red, three-quarter front view from the left, standing on a dark polished concrete floor that shows a soft mirror reflection of the car. Background: a dark board-formed concrete wall with small tie holes, charcoal and near-black tones. Lighting: one large soft overhead key light from upper left sculpting the body lines, deep falloff into shadow, low-key, moody, high-end editorial car photography, natural colour, crisp detail, 50mm lens, camera at bumper height. The car occupies the central 55% of the frame with generous dark negative space above and around it. No license plate (smooth blank front bumper), no visible lettering, no badges with text, no logos, no watermark, no people.",
+    "gen-amg.jpg": "Professional automotive studio photograph of a Mercedes-AMG GT coupe in matte graphite grey metallic, three-quarter front view from the right, standing on a dark polished concrete floor that shows a soft mirror reflection of the car. Background: a dark board-formed concrete wall with small tie holes, charcoal and near-black tones. Lighting: one large soft overhead key light from upper right sculpting the long hood and body lines, cool silver highlights, deep falloff into shadow, low-key, moody, high-end editorial car photography, natural colour, crisp detail, 50mm lens, camera at bumper height. The car occupies the central 55% of the frame with generous dark negative space above and around it. No license plate (smooth blank front bumper), no visible lettering, no badges with text, no logos, no watermark, no people."
+  }
+}
