@@ -195,7 +195,9 @@ section{position:relative}
 
 /* why us — one detail, read closely */
 .why{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(40px,7vw,120px);align-items:center}
-.why-fig{margin:0}
+.why-fig{margin:0;position:relative;isolation:isolate}
+/* ambilight: the photo's own colours, blurred, spill onto the ground behind it */
+.why-fig::before{content:"";position:absolute;z-index:-1;inset:-9% -12% -6% -12%;pointer-events:none;background:url(assets/speciale-detail.jpg) 42% 55%/cover no-repeat;filter:blur(80px) saturate(1.4) brightness(.8);opacity:.42;transform:translateZ(0)}
 .why-fig img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius)}
 .why .lead{margin-top:var(--s5)}
 .ways{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6);margin:var(--s7) 0 0;padding:var(--s5) 0 0;list-style:none;border-top:1px solid var(--line-strong)}
@@ -252,7 +254,11 @@ section{position:relative}
 .car figcaption{padding-top:var(--s3);font-size:15px;font-weight:500}
 
 /* faq */
-.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(40px,6vw,96px)}
+/* ambient light pools on the dark ground (Gold Coast about-section method), cool studio blue */
+.amb{isolation:isolate;overflow:clip}
+.amb::before,.amb::after{content:"";position:absolute;z-index:-1;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgb(var(--glow)/.95),rgb(var(--glow)/.42) 45%,rgb(var(--glow)/0))}
+.amb::before{left:16%;top:34%;width:min(980px,120vw);height:760px}
+.amb::after{left:84%;top:78%;width:min(1100px,130vw);height:640px;opacity:.7}.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(40px,6vw,96px)}
 .faq-list{border-top:1px solid var(--line-strong)}
 .faq details{border-bottom:1px solid var(--line)}
 .faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:var(--s5);padding:var(--s5) 0;font-size:var(--t-lead);font-weight:500;color:var(--text);transition:color var(--dur) var(--ease)}
@@ -273,7 +279,7 @@ section{position:relative}
 
 /* final */
 /* visual breaks: full width, half a screen tall, copy centred on a darkened plate */
-.vbreak{position:relative;isolation:isolate;overflow:hidden;display:grid;place-items:center;height:clamp(420px,88svh,800px);text-align:center;border-top:1px solid var(--line)}
+.vbreak{position:relative;isolation:isolate;overflow:hidden;display:grid;place-items:center;height:clamp(500px,100svh,960px);text-align:center;border-top:1px solid var(--line)}
 .vbreak + .sec{border-top:1px solid var(--line)}
 /* pin + overlay (user): a break pins to the top and the next section slides over it like a sheet */
 main > section:not(.vbreak){position:relative;z-index:1}
@@ -287,7 +293,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
 .vbreak .lead{max-width:52ch;color:#D2D5D9;text-shadow:0 1px 14px rgba(6,6,7,.8)}
 .vb-1 img{object-position:38% 62%}
 .vb-2 img{object-position:50% 60%}
-@media (max-width:640px){.vbreak{height:clamp(380px,62svh,540px)}}
+@media (max-width:640px){.vbreak{height:clamp(460px,74svh,650px)}}
 @supports (animation-timeline: view()){
   @media (prefers-reduced-motion:no-preference){
     .js-motion .vbreak img{animation:m-vb linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
@@ -640,7 +646,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
     </div>
   </section>
 
-  <section class="sec" id="faq" aria-labelledby="faq-h">
+  <section class="sec amb" id="faq" aria-labelledby="faq-h">
     <div class="wrap faq">
       <div>
         <h2 id="faq-h" class="display h2">Questions sellers ask</h2>
