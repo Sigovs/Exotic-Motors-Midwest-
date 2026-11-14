@@ -427,6 +427,16 @@ main > section:not(.vbreak){position:relative;z-index:1}
   *,*::before,*::after{transition-duration:0s!important}
 }
 </style>
+
+<style>
+/* anime.js layer (animejs 4.5.0): the rail becomes a draggable track only once the library is running;
+   without it the rail stays a native scroll-snap track with the scroll pager */
+.anime-on .rail-vp{overflow:hidden}
+.anime-on .rail{overflow:visible;scroll-snap-type:none;touch-action:pan-y;cursor:grab;will-change:transform}
+.anime-on .rail:active{cursor:grabbing}
+.anime-on .rail .car{user-select:none;-webkit-user-drag:none}
+.anime-on .rail img{pointer-events:none}
+</style>
 </head>
 <body>
 
@@ -624,7 +634,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
         <div class="rail-shell">
           <button type="button" class="side side-prev" data-rprev aria-controls="rail" aria-label="Previous cars" aria-disabled="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
           <button type="button" class="side side-next" data-rnext aria-controls="rail" aria-label="Next cars"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
-        <div class="rail" id="rail" role="region" aria-labelledby="rail-h" tabindex="0">
+        <div class="rail-vp"><div class="rail" id="rail" role="region" aria-labelledby="rail-h" tabindex="0">
           <figure class="car"><img src="assets/scuderia-spider.jpg" alt="Red Ferrari 430 Scuderia Spider 16M in profile" width="1200" height="800" loading="lazy"><figcaption>Ferrari 430 Scuderia Spider 16M</figcaption></figure>
           <figure class="car"><img src="assets/huracan.jpg" alt="Matte white Lamborghini Huracán, front view" width="1200" height="800" loading="lazy"><figcaption>Lamborghini Huracán</figcaption></figure>
           <figure class="car"><img src="assets/488.jpg" alt="Black Ferrari 488, front three-quarter" width="1200" height="800" loading="lazy"><figcaption>Ferrari 488</figcaption></figure>
@@ -633,7 +643,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
           <figure class="car"><img src="assets/rail-tdf.jpg" alt="Grey Ferrari F12tdf in profile in a concrete studio" width="1200" height="800" loading="lazy"><figcaption>Ferrari F12tdf</figcaption></figure>
           <figure class="car"><img src="assets/rail-458-spider.jpg" alt="Matte white Ferrari 458 Spider from above" width="1200" height="800" loading="lazy"><figcaption>Ferrari 458 Spider</figcaption></figure>
           <figure class="car"><img src="assets/rail-huracan-black.jpg" alt="Black Lamborghini Huracán, front view" width="900" height="600" loading="lazy"><figcaption>Lamborghini Huracán</figcaption></figure>
-        </div>
+        </div></div>
         </div>
       </div>
     </div>
@@ -787,7 +797,9 @@ main > section:not(.vbreak){position:relative;z-index:1}
   const $q = (s) => document.querySelector(s);
   pager($q('#greviews'), $q('[data-gprev]'), $q('[data-gnext]'), $q('[data-gcur]'), $q('[data-gtot]'));
   const rail = document.getElementById('rail');
-  pager(rail, $q('[data-rprev]'), $q('[data-rnext]'), $q('[data-rcur]'), $q('[data-rtot]'));
+  pager(rail, $q('[data-rprev]'), $q('[data-rnext]'), $q('[data-rcur]'), $q('[data-rtot]')); // fallback; anime.js takes over when it loads
+  // if the anime.js module never arrives, nothing it would reveal stays hidden
+  setTimeout(() => { if (!document.documentElement.classList.contains('anime-on')) document.querySelectorAll('.hero h1, .hero .lead, .step, .step .n, .step h3').forEach((e) => e.classList.add('m-in')); }, 2500);
   // load the off-page cars before anyone pages to them
   new IntersectionObserver(([e], o) => {
     if (!e.isIntersecting) return;
@@ -797,5 +809,96 @@ main > section:not(.vbreak){position:relative;z-index:1}
 })();
 </script>
 <script src="motion.js" defer onerror="document.documentElement.classList.remove('js-motion')"></script>
+
+<script type="module">
+import { animate, splitText, stagger, spring, createDraggable, utils } from 'https://cdn.jsdelivr.net/npm/animejs@4.5.0/+esm';
+
+const root = document.documentElement;
+root.classList.add('anime-on');
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motion = root.classList.contains('js-motion') && !still;
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
+/* anime.js layer — user-approved after the A/B lab (2026-11-14) */
+
+/* 1. HERO — characters rise inside their line masks on a spring; lines cascade as a staircase */
+const h1 = $('.hero h1'), lead = $('.hero .lead');
+if (motion) {
+  // split.addEffect: v4 splits lines after fonts load, so animate inside the effect (plays once)
+  let h1Played = false, leadPlayed = false;
+  splitText(h1, { lines: { wrap: 'clip' }, chars: true }).addEffect(({ chars }) => {
+    h1.classList.add('m-in');
+    if (h1Played || !chars.length) return;
+    h1Played = true;
+    utils.set(chars, { y: '115%', x: '-.35em', opacity: 0 });
+    return animate(chars, { y: '0%', x: '0em', opacity: 1, ease: spring({ bounce: .22, duration: 620 }), delay: stagger(16) });
+  });
+  splitText(lead, { lines: { wrap: 'clip' } }).addEffect(({ lines }) => {
+    lead.classList.add('m-in');
+    if (leadPlayed || !lines.length) return;
+    leadPlayed = true;
+    utils.set(lines, { x: '-104%' });
+    return animate(lines, { x: '0%', ease: spring({ bounce: 0, duration: 760 }), delay: stagger(90, { start: 420 }) });
+  });
+} else { h1.classList.add('m-in'); lead.classList.add('m-in'); }
+
+/* 2. STEP CARDS — float up from below on a spring, one rung after another */
+const cards = $$('.step');
+const inner = cards.flatMap((c) => $$('.n, h3', c));
+if (motion) {
+  utils.set(cards, { y: 110, opacity: 0 });
+  cards.forEach((c) => c.classList.add('m-in')); inner.forEach((e) => e.classList.add('m-in'));
+  new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    animate(cards, { y: 0, opacity: { to: 1, duration: 500, ease: 'out(2)' }, ease: spring({ bounce: .3, duration: 900 }), delay: stagger(190) });
+  }, { rootMargin: '0px 0px -12% 0px' }).observe($('.how'));
+} else { cards.forEach((c) => c.classList.add('m-in')); inner.forEach((e) => e.classList.add('m-in')); }
+
+/* 3. RAIL — drag with inertia, snaps by page, released on a spring; arrows glide the same track */
+const rail = $('#rail'), vp = $('.rail-vp');
+// replace the arrows to drop the native-scroll pager's listeners
+const [prev, next] = ['[data-rprev]', '[data-rnext]'].map((s) => { const b = $(s); const c = b.cloneNode(true); b.replaceWith(c); return c; });
+rail.scrollLeft = 0;
+const geo = () => {
+  const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+  const card = rail.firstElementChild.getBoundingClientRect().width;
+  const per = Math.max(1, Math.round((vp.clientWidth + gap) / (card + gap)));
+  const pages = Math.ceil(rail.children.length / per);
+  const stride = per * (card + gap);
+  const max = Math.max(0, rail.children.length * (card + gap) - gap - vp.clientWidth);
+  return { stride, pages, max };
+};
+// the track is a grid of fixed columns; give it its real width so it can be dragged
+rail.style.width = 'max-content';
+const fit = () => { const g = parseFloat(getComputedStyle(rail).columnGap) || 0; const per = parseInt(getComputedStyle(rail).getPropertyValue('--per'), 10) || 4; const w = (vp.clientWidth - (per - 1) * g) / per; rail.style.gridAutoColumns = w + 'px'; };
+fit();
+const sync = (x) => {
+  const { stride, max } = geo();
+  prev.setAttribute('aria-disabled', String(x >= -1));
+  next.setAttribute('aria-disabled', String(x <= -max + 1));
+};
+const drag = createDraggable(rail, {
+  container: () => [0, 0, 0, -geo().max],
+  x: { snap: () => geo().stride },
+  y: false,
+  releaseEase: still ? 'out(3)' : spring({ bounce: .18, duration: 700 }),
+  velocityMultiplier: 1.4,
+  containerFriction: .6,
+  onUpdate: (self) => sync(self.x),
+  onSettle: (self) => sync(self.x),
+  onResize: () => fit(),
+  onAfterResize: (self) => self.setX(Math.max(-geo().max, utils.snap(self.x, geo().stride))),
+});
+const glide = (dir) => {
+  const { stride, max } = geo();
+  const to = Math.max(-max, Math.min(0, utils.snap(drag.x, stride) - dir * stride));
+  const p = { x: drag.x };
+  animate(p, { x: to, ease: still ? 'linear' : spring({ bounce: .12, duration: 760 }), duration: still ? 0 : undefined, onUpdate: () => drag.setX(p.x), onComplete: () => sync(to) });
+};
+prev.addEventListener('click', () => { if (prev.getAttribute('aria-disabled') !== 'true') glide(-1); });
+next.addEventListener('click', () => { if (next.getAttribute('aria-disabled') !== 'true') glide(1); });
+sync(0);
+</script>
 </body>
 </html>

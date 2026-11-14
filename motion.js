@@ -257,20 +257,7 @@
 
   // step cards: each card floats up from below, one rung after the last (user: "vsplyvat snizu stupenkoj"),
   // and its numeral and title lines rise inside it as it lands
-  $$('.step').forEach((card) => {
-    const n = $('.n', card), h3 = $('h3', card);
-    unit(card, () => {
-      const step = tms('--m-line-step');
-      const d = slot(textKey(card), tms('--m-card-step'));
-      card.classList.add('m-in');
-      card.animate(
-        [{ transform: `translateY(${tok('--m-card-from')})`, opacity: 0 }, { transform: 'none', opacity: 1 }],
-        { duration: tms('--m-card-rise'), delay: d, easing: tok('--m-ease-lift'), fill: 'both' }
-      ).finished.then((a) => a.cancel(), () => {});
-      rise(n, { dur: tms('--m-line'), step, delay: d + 120 });
-      rise(h3, { dur: tms('--m-line'), step, delay: d + 120 + step });
-    }, () => show(card, n, h3));
-  });
+  // step cards are animated by the anime.js layer in index.html (spring float, staircase)
 
   // what we buy: the five segments rise onto their rules
   $$('.buy-list li').forEach((li) => unit(li, () => row(li, slot(textKey(li), tms('--m-row-step'))), () => show(li)));
@@ -300,13 +287,7 @@
   units.forEach((_, el) => io.observe(el));
 
   /* ---- hero: plays once on load, inside the budget; the form never moves ---- */
-  const heroGo = once(() => {
-    const budget = tms('--m-hero-budget');
-    // hero lines slide in from the side, one rung after another (user: "slide-in stupenkoj s boku")
-    const side = `translateX(${tok('--m-hero-from')})`;
-    rise($('.hero h1'), { dur: tms('--m-hero-line'), step: tms('--m-hero-step'), budget, from: side });
-    rise($('.hero .lead'), { dur: tms('--m-hero-lead'), step: tms('--m-hero-lead-step'), delay: tms('--m-hero-lead-at'), budget, from: side });
-  });
+  const heroGo = () => {}; // hero is animated by the anime.js layer in index.html (per-character spring cascade)
   // lines are measured, so wait for the display face, but never longer than 400ms
   Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), wait(400)]).then(heroGo);
 
