@@ -26,6 +26,18 @@
       "references": [
         "gen-hero-trio master (4K)"
       ]
+    },
+    "gen-hero-v2.jpg": {
+      "fal_request_id": "01a1e546-7561-7aa1-83b1-804242c96cf6",
+      "output_index": 1,
+      "model": "google/nano-banana-2.1/edit",
+      "prompt_key": "emm-hero-v2-cluster-left",
+      "references": [
+        "assets/gen-hero-trio.jpg (studio, light, cars)",
+        "assets/gen-hero-mobile.jpg (tight grouping)"
+      ],
+      "note": "v2.html desktop hero: the same three cars grouped in the left ~60%, right side left empty for the form card",
+      "date": "2026-11-16"
     }
   },
   "origin": "synthetic",

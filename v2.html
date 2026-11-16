@@ -18,7 +18,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="assets/gen-hero-trio.jpg">
+<link rel="preload" as="image" href="assets/gen-hero-v2.jpg" media="(min-width:1181px)">
+<link rel="preload" as="image" href="assets/gen-hero-mobile.jpg" media="(max-width:640px)">
+<link rel="preload" as="image" href="assets/gen-hero-trio.jpg" media="(min-width:641px) and (max-width:1180px)">
 <style>
 /* ---------- tokens ---------- */
 :root{
@@ -583,6 +585,30 @@ main > section:not(.vbreak){position:relative;z-index:1}
   .brand{width:190px}
   .hero-copy{padding-top:120px}
 }
+
+/* v2 hero (≥1181px): gen-hero-v2.jpg — the three cars grouped in the left ~60% of the studio, the form a vertical sheet on the empty right */
+@media (min-width:1181px){
+  .hero{height:clamp(720px,100svh,1100px)}
+  /* the frame is placed from the card: the BMW nose (≈60% across the 1.79:1 frame, which is sized by the hero height)
+     lands ~160px under the card's left edge at every desktop size */
+  .hero{--card-l:calc(100% - max(0px,(100% - var(--max) - var(--gutter)*2)/2) - var(--gutter) - min(370px,30vw))}
+  .hero-img{top:0;bottom:0;right:0;left:calc(var(--card-l) + 160px - 1.075 * clamp(720px,100svh,1100px));width:auto;transform:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%);mask-image:linear-gradient(90deg,transparent,#000 8%)}
+  .hero-img picture,.hero-img img{display:block;height:100%}
+  .hero-img img{width:100%;aspect-ratio:auto;object-fit:cover;object-position:0% 30%}
+  .hero-img::after{background:linear-gradient(180deg,var(--studio) 0%,rgba(6,6,7,.45) 10%,rgba(6,6,7,0) 30%,rgba(11,12,14,0) 80%,rgba(11,12,14,.8) 93%,var(--bg) 100%)}
+  .hero h1{font-size:clamp(44px,4.6vw,68px);max-width:16ch}
+  .hero .lead{max-width:40ch}
+  .offer{top:0;bottom:0;display:flex;align-items:center;pointer-events:none}
+  .offer .wrap{display:flex;justify-content:flex-end;padding-top:88px}
+  .offer .wrap::before{left:auto;right:var(--gutter);width:640px;height:520px;transform:translate(22%,0);bottom:auto;top:20%}
+  .hero .offer-card{pointer-events:auto;width:min(370px,30vw);padding:var(--s6)}
+  .hero .offer-head{flex-direction:column;align-items:flex-start;gap:var(--s2);margin-bottom:var(--s5)}
+  .hero .offer-head h2{font-size:clamp(26px,2.2vw,32px);line-height:1.05}
+  .hero .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero .fields .field:nth-child(3),.hero .fields .btn{grid-column:1/-1}
+  .hero .fields .field:nth-child(5){grid-column:auto}
+  .hero .fields .btn{margin-top:var(--s2)}
+}
 </style>
 </head>
 <body>
@@ -606,7 +632,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
       <h1 id="h1" class="display">Sell your Porsche, AMG or&nbsp;M</h1>
       <p class="lead">Exotic Motors Midwest buys enthusiast and luxury cars, from a weekend 911 to a garage-kept Ferrari. Tell us what you drive and we'll come back with an offer.</p>
     </div>
-    <div class="hero-img"><picture><source media="(max-width:640px)" srcset="assets/gen-hero-mobile.jpg" width="1200" height="1607"><img src="assets/gen-hero-trio.jpg" alt="Silver Porsche 911 Turbo S, orange Mercedes-AMG GT Black Series and blue BMW M8 Competition in a dark concrete studio" width="2400" height="1610"></picture></div>
+    <div class="hero-img"><picture><source media="(min-width:1181px)" srcset="assets/gen-hero-v2.jpg" width="2400" height="1340"><source media="(max-width:640px)" srcset="assets/gen-hero-mobile.jpg" width="1200" height="1607"><img src="assets/gen-hero-trio.jpg" alt="Silver Porsche 911 Turbo S, orange Mercedes-AMG GT Black Series and blue BMW M8 Competition in a dark concrete studio" width="2400" height="1610"></picture></div>
 
     <div class="offer" id="offer">
       <div class="wrap">
