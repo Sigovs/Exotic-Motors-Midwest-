@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* motion gate: hidden-until-revealed states only exist when motion is allowed and motion.js reports in */
+(function (d) {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
+  d.classList.add('js-motion');
+  setTimeout(function () { if (!d.classList.contains('m-ready')) d.classList.remove('js-motion'); }, 1500);
+})(document.documentElement);
+</script>
+<title>Sell Your Car — Exotic Motors Midwest</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Sell your Porsche, Mercedes-AMG, BMW M or exotic to Exotic Motors Midwest. Tell us about your car and get an offer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/gen-hero-trio.jpg">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --bg:#0B0C0E;
+  --studio:#060607;          /* the hero's unlit studio black */
+  --surface:#131518;
+  --surface-2:#1A1D21;
+  --line:rgba(255,255,255,.10);
+  --line-strong:rgba(255,255,255,.20);
+  --text:#F3F3F1;
+  --muted:#A4A8AE;
+  --faint:#80858D;
+  --red:#EB0014;            /* from the EM badge / current site — primary action only */
+  --red-press:#C40011;
+  --glow:44 56 74;           /* cool studio spill, rgb triplet (Gold Coast method) */
+
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;--s9:96px;--s10:128px;--s11:160px;
+  --radius:2px;
+  --pill:999px;
+  --gutter:clamp(20px,6vw,120px);
+  --max:1240px;
+  --sec-y:clamp(88px,10vw,160px);
+
+  --f:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-small:14px;--t-body:16px;--t-lead:18px;--t-h3:22px;
+  --t-h2:clamp(32px,3.6vw,48px);
+  --t-h1:clamp(40px,5.6vw,80px);
+
+  --ease:cubic-bezier(.2,.7,.2,1);
+  interpolate-size:allow-keywords;
+  --dur:220ms;
+
+  /* motion: the studio rises. Every entrance travels one way, up, out of a mask or from the floor */
+  --m-ease-lift:cubic-bezier(.19,1,.22,1);      /* lines and rows: quick travel, long cushioned stop */
+  --m-ease-shutter:cubic-bezier(.32,.04,.1,1);  /* photo curtain: a shutter with weight, short pickup, long glide home */
+  --m-ease-settle:cubic-bezier(.3,.6,.35,1);    /* scrubbed pull-ups landing */
+  --m-ease-glide:cubic-bezier(.65,0,.25,1);     /* rail page change: a move between two states */
+  --m-rise-from:135%;                           /* a line starts fully below its own mask */
+  --m-line:1200ms;--m-line-step:110ms;          /* titles: each line one rung after the last */
+  --m-lead:1000ms;--m-lead-step:70ms;
+  --m-row:1000ms;--m-row-step:80ms;
+  --m-card-step:200ms;                          /* step cards float up one after another (user: "stupenkoj") */
+  --m-card-rise:1100ms;--m-card-from:96px;
+  --m-curtain:1600ms;--m-curtain-step:140ms;--m-curtain-scale:1.08;
+  --m-hero-line:1000ms;--m-hero-step:170ms;--m-hero-lead:900ms;--m-hero-lead-at:380ms;--m-hero-lead-step:90ms;
+  --m-hero-from:-104%;                          /* hero lines enter from the left, out of their own mask */
+  --m-hero-budget:1700ms;                       /* the whole hero entrance ends inside this; the form never waits */
+  --m-page:760ms;
+  --m-drift:16%;                                /* hero plate lag as the hero leaves */
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:var(--s9)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f);font-size:var(--t-body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+p{text-wrap:pretty}
+:focus-visible{outline:2px solid var(--text);outline-offset:3px}
+.nw{white-space:nowrap}
+.vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.pill{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;border:1px solid var(--line-strong);border-radius:var(--pill);color:var(--text);font-size:15px;font-weight:600;line-height:1;text-decoration:none;white-space:nowrap;font-variant-numeric:tabular-nums;transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.pill:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.45)}
+.chip{display:inline-flex;align-items:center;height:32px;padding:0 14px;border:1px solid var(--line);border-radius:var(--pill);color:var(--muted);font-size:14px;line-height:1;white-space:nowrap}
+.wrap{width:100%;max-width:calc(var(--max) + var(--gutter)*2);margin-inline:auto;padding-inline:var(--gutter)}
+
+/* type roles — one family, two voices: expanded display, normal-width text */
+.display{font-stretch:115%;font-weight:600;letter-spacing:-.015em;line-height:1.02;margin:0;text-wrap:balance}
+.h2{font-size:var(--t-h2)}
+.h-sm{font-size:var(--t-h3);line-height:1.2;letter-spacing:0}
+.lead{font-size:var(--t-lead);color:var(--muted);max-width:56ch;margin:0}
+
+/* buttons */
+.btn{--h:56px;display:inline-flex;align-items:center;justify-content:center;height:var(--h);padding:0 var(--s6);border:0;border-radius:var(--radius);font:600 16px/1 var(--f);font-stretch:110%;letter-spacing:.01em;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-press)}
+.btn-line{background:transparent;color:var(--text);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--text)}
+
+/* ---------- header ---------- */
+.top{position:fixed;inset:0 0 auto;z-index:20;border-bottom:1px solid transparent;transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),-webkit-backdrop-filter var(--dur) var(--ease),backdrop-filter var(--dur) var(--ease)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:96px;transition:height 320ms var(--ease)}
+.top.is-stuck{background:rgba(11,12,14,.78);-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);border-bottom-color:var(--line)}
+.top.is-stuck .wrap{height:72px}
+.brand img{transition:transform 320ms var(--ease);transform-origin:left center}
+.top.is-stuck .brand img{transform:scale(.86)}
+.brand{display:block;width:clamp(200px,20vw,260px)}
+.brand img{width:100%;height:auto}
+.top nav{display:flex;align-items:center;gap:var(--s6)}
+/* header CTA: appears once the form has left the screen, so the first screen never shows two identical actions */
+.top .cta{--h:44px;max-width:0;padding:0;margin-left:calc(var(--s6) * -1);overflow:hidden;white-space:nowrap;font-size:15px;opacity:0;visibility:hidden;transition:max-width 320ms var(--ease),padding 320ms var(--ease),margin 320ms var(--ease),opacity var(--dur) var(--ease),visibility 0s linear 320ms,background var(--dur) var(--ease)}
+.top.show-cta .cta{max-width:220px;padding:0 var(--s5);margin-left:0;opacity:1;visibility:visible;transition:max-width 320ms var(--ease),padding 320ms var(--ease),margin 320ms var(--ease),opacity var(--dur) var(--ease) 80ms,visibility 0s,background var(--dur) var(--ease)}
+
+.top nav a{font-size:15px;font-weight:500;text-decoration:none;color:var(--muted);transition:color var(--dur) var(--ease)}
+.top nav a:hover{color:var(--text)}
+.top nav .cta,.top nav .cta:hover{color:#fff}
+
+/* ---------- hero ---------- */
+/* one studio frame: the cars stand on the floor, the form sits on their reflections,
+   the type sits in the empty wall above them. Height follows the viewport so the form
+   stays in the first screen (1920×1080, 1440×900, 1024×768). */
+.hero{position:relative;height:clamp(680px,100svh,1100px);background:linear-gradient(180deg,var(--studio) 0%,var(--studio) 55%,var(--bg) 100%);isolation:isolate;overflow-x:clip;overflow-y:visible}
+.hero-img{position:absolute;left:50%;bottom:0;width:min(100%,1680px);transform:translate(-50%,0);z-index:-1}
+@media (min-width:1681px){.hero-img{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}}
+.hero-img img{width:100%;height:auto;aspect-ratio:2400/1610;object-fit:cover}
+.hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--studio) 0%,rgba(6,6,7,.4) 14%,rgba(6,6,7,0) 32%,rgba(11,12,14,0) 70%,rgba(11,12,14,.85) 88%,var(--bg) 100%)}
+.hero-copy{padding-top:clamp(120px,9vw,168px);display:grid;grid-template-columns:minmax(0,1fr);justify-items:start;gap:var(--s5)}
+.hero h1{font-size:var(--t-h1);max-width:14ch}
+.hero .lead{color:#D2D5D9;max-width:44ch;text-shadow:0 1px 14px rgba(6,6,7,.85),0 0 2px rgba(6,6,7,.6)} /* may sit over the cars' rooflines */
+
+/* offer bar — the form, docked on the studio floor */
+.offer{position:absolute;left:0;right:0;bottom:clamp(32px,4vw,56px)}
+.offer .wrap{position:relative;isolation:isolate}
+/* light spilling up under the card, low and slightly left */
+.offer .wrap::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:34%;bottom:0;width:min(1100px,96vw);height:440px;transform:translate(-50%,46%);background:radial-gradient(closest-side,rgb(var(--glow)/.95),rgb(var(--glow)/.42) 46%,rgb(var(--glow)/0))}
+.offer-card{background:rgba(16,17,20,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);border-top-color:var(--line-strong);border-radius:var(--radius);padding:var(--s5)}
+.offer-card{position:relative}
+@property --beam{syntax:'<angle>';inherits:false;initial-value:0deg}
+.beam{position:absolute;inset:-1px;z-index:3;border-radius:inherit;padding:1px;pointer-events:none;opacity:0;background:conic-gradient(from var(--beam),rgb(150 185 235/0) 0deg,rgb(150 185 235/0) 230deg,rgb(140 178 232/.7) 316deg,#CFE2FF 344deg,rgb(150 185 235/0) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;filter:drop-shadow(0 0 6px rgb(120 165 230/.6))}
+/* one pass is 2.6s, then 2s of rest, looping (user); hidden while someone is filling the form */
+.beam.run{animation:beam 4.6s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes beam{0%{--beam:0deg;opacity:0}7%{opacity:1}46%{opacity:1}56.5%{--beam:360deg;opacity:0}100%{--beam:360deg;opacity:0}}
+.offer-card:focus-within .beam{opacity:0!important;animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.beam{display:none}}
+.offer-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s5);margin-bottom:var(--s4)}
+.offer-head h2{font-size:var(--t-h3);font-stretch:115%;font-weight:600;margin:0}
+.offer-head p{margin:0;font-size:var(--t-small);color:var(--muted)}
+.offer-head p{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.fields{display:grid;grid-template-columns:.8fr 1fr 1fr .9fr 1.3fr auto;gap:var(--s2)}
+.field{position:relative}
+.field label{position:absolute;left:14px;top:8px;font-size:14px;font-weight:500;letter-spacing:.01em;color:var(--faint);pointer-events:none}
+.field label span{font-weight:400}
+.field input,.field select{width:100%;height:60px;padding:28px 14px 8px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);color:var(--text);font:500 16px/1 var(--f);appearance:none;-webkit-appearance:none;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 28px,calc(100% - 13px) 28px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.field select:invalid{color:var(--faint)}
+.field option{background:var(--surface-2);color:var(--text)}
+.field input:hover,.field select:hover{border-color:var(--line-strong)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--text);background-color:#202328}
+.field input:user-invalid,.field select:user-invalid{border-color:var(--red)}
+.fields .btn{height:60px;white-space:nowrap}
+.offer-done{display:none;align-items:center;justify-content:space-between;gap:var(--s5);min-height:56px}
+.offer-done p{margin:0;color:var(--muted)}
+.offer-done strong{color:var(--text);font-weight:600}
+.offer.is-done .fields{display:none}
+.offer.is-done .offer-done{display:flex}
+
+/* offer drawer (header CTA): a full-height panel from the right — photo, the form in two groups, the action pinned */
+html:has(.omodal[open]){overflow:hidden}
+.omodal{position:fixed;inset:0 0 0 auto;width:min(540px,100vw);height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;color:var(--text);overflow:hidden}
+.omodal::backdrop{background:rgba(6,6,7,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.omodal .om-card{height:100%;display:flex;flex-direction:column;padding:0;border-radius:0;border-width:0 0 0 1px;border-left-color:var(--line-strong);background:rgba(13,14,16,.94)}
+.om-photo{position:relative;flex:none;height:clamp(140px,24vh,250px);margin:0;overflow:hidden}
+.om-photo img{width:100%;height:100%;object-fit:cover;object-position:28% 38%;display:block;-webkit-mask:linear-gradient(#000 40%,transparent);mask:linear-gradient(#000 40%,transparent)}
+.om-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:0 var(--s7) var(--s5);margin-top:calc(var(--s7) * -1);position:relative}
+.om-body .offer-head{display:block;margin:0 0 var(--s6)}
+.om-body .offer-head h2{font-size:clamp(34px,4.2vw,46px);line-height:1;letter-spacing:-.015em}
+.om-body .offer-head p{display:block;margin-top:var(--s2);font-size:15px;line-height:1.5;max-width:40ch}
+.om-group{border:0;margin:0 0 var(--s5);padding:0;min-width:0}
+.om-group legend{padding:0;margin-bottom:var(--s2);font-size:14px;font-weight:500;color:var(--muted)}
+.om-group .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.om-group .field.wide{grid-column:1/-1}
+.om-foot{flex:none;display:grid;gap:var(--s3);padding:var(--s5) var(--s7) clamp(var(--s5),8vh,var(--s9));border-top:1px solid var(--line);background:rgba(13,14,16,.96)}
+.om-foot .btn{width:100%}
+.om-foot p{margin:0;display:flex;align-items:center;justify-content:center;gap:var(--s3);font-size:14px;color:var(--muted)}
+.om-x{position:absolute;z-index:2;top:var(--s5);right:var(--s5);width:44px;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line-strong);border-radius:var(--pill);background:rgba(6,6,7,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--text);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.om-x:hover{border-color:rgba(255,255,255,.5);background:rgba(6,6,7,.75)}
+.om-x svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.omodal .offer-done{display:none}
+.omodal.is-done :is(.om-group,.om-foot){display:none}
+.omodal.is-done .offer-done{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s5)}
+@media (prefers-reduced-motion:no-preference){
+  .omodal[open]{animation:om-in 640ms var(--m-ease-lift) both}
+  .omodal[open]::backdrop{animation:om-fade 320ms var(--ease) both}
+  .omodal[open] .om-photo img{animation:om-photo 1100ms var(--m-ease-lift) both}
+  .omodal[open] :is(.offer-head,.om-group){animation:om-rise 620ms var(--m-ease-lift) both}
+  .omodal[open] .offer-head{animation-delay:120ms}
+  .omodal[open] .om-group{animation-delay:200ms}
+  .omodal[open] .om-group + .om-group{animation-delay:260ms}
+  .omodal.is-closing{animation:om-out 280ms var(--m-ease-glide) both}
+  .omodal.is-closing::backdrop{animation:om-fade 280ms var(--ease) reverse both}
+}
+@keyframes om-in{from{transform:translateX(100%)}to{transform:none}}
+@keyframes om-out{from{transform:none}to{transform:translateX(100%)}}
+@keyframes om-fade{from{opacity:0}to{opacity:1}}
+@keyframes om-photo{from{transform:scale(1.08)}to{transform:none}}
+@keyframes om-rise{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@media (max-width:560px){
+  .omodal .om-card{border-left-width:0}
+  .om-body{padding:0 var(--s5) var(--s5)}
+  .om-foot{padding:var(--s4) var(--s5) calc(var(--s4) + env(safe-area-inset-bottom))}
+}
+
+/* ---------- sections ---------- */
+section{position:relative}
+.sec{padding-block:var(--sec-y)}
+.sec + .sec{border-top:1px solid var(--line)}
+
+/* how it works — one ruled row under the form, not a feature triptych */
+.how{padding-block:clamp(64px,7vw,112px)}
+.how .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s6)}
+.how h2{align-self:start}
+.steps{display:contents;list-style:none}
+.step{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-rows:auto auto 1fr;align-content:start;padding:var(--s6);background:var(--surface);border:1px solid var(--line);border-top-color:var(--line-strong);border-radius:var(--radius)}
+.step::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:0;bottom:0;width:150%;height:130%;transform:translate(-38%,48%);background:radial-gradient(closest-side,rgb(var(--glow)/.9),rgb(var(--glow)/.32) 50%,rgb(var(--glow)/0))}
+.step h3{font-size:var(--t-h3);font-weight:600;font-stretch:110%;line-height:1.2;min-height:2.4em;margin:0 0 var(--s4)}
+.step .n{display:block;padding-bottom:var(--s8);font-size:clamp(36px,3.2vw,48px);font-stretch:115%;font-weight:600;line-height:1;color:var(--faint);font-variant-numeric:tabular-nums}
+.step p{margin:0;color:var(--muted);max-width:34ch}
+
+/* what we buy */
+.buy{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px,6vw,96px);align-items:start}
+.buy-list{list-style:none;margin:var(--s6) 0 0;padding:0;border-top:1px solid var(--line-strong)}
+.buy-list li{border-bottom:1px solid var(--line);transition:border-color var(--dur) var(--ease)}
+.buy-list li:has(button:hover),.buy-list li:has(button:focus-visible){border-bottom-color:var(--text)}
+.buy-list button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:var(--s4);padding:var(--s5) 0;cursor:pointer}
+.buy-list button:focus-visible{outline:2px solid var(--text);outline-offset:4px}
+.buy-list .name{font-size:clamp(22px,2.2vw,30px);font-stretch:115%;font-weight:600;line-height:1.15}
+.buy-list .sub{grid-column:1;font-size:var(--t-small);color:var(--faint);margin-top:var(--s1)}
+.buy-list .go{grid-row:1/span 2;grid-column:2;font-size:15px;font-weight:500;color:var(--muted);transition:color var(--dur) var(--ease)}
+.buy-list button:hover .go,.buy-list button:focus-visible .go{color:var(--text)}
+.buy-note{margin:var(--s5) 0 0;color:var(--muted);font-size:var(--t-small)}
+.buy-fig{margin:0;position:sticky;top:var(--s7);display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.buy-fig img{width:100%;object-fit:cover;border-radius:var(--radius)}
+.buy-fig .m{grid-column:1/-1;aspect-ratio:16/10;object-position:50% 62%}
+.buy-fig .s1{aspect-ratio:4/3;object-position:44% 70%}
+.buy-fig .s2{aspect-ratio:4/3;object-position:36% 72%}
+
+/* why us — one detail, read closely */
+.why{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(40px,7vw,120px);align-items:center}
+.why-fig{margin:0;position:relative;isolation:isolate}
+section:has(> .why){overflow-x:clip} /* the ambilight may spill past the viewport on phones */
+/* ambilight: the photo's own colours, blurred, spill onto the ground behind it */
+.why-fig::before{content:"";position:absolute;z-index:-1;inset:-9% -12% -6% -12%;pointer-events:none;background:url(assets/speciale-detail.jpg) 42% 55%/cover no-repeat;filter:blur(80px) saturate(1.4) brightness(.8);opacity:.42;transform:translateZ(0)}
+.why-fig img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius)}
+.why .lead{margin-top:var(--s5)}
+.ways{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6);margin:var(--s7) 0 0;padding:var(--s5) 0 0;list-style:none;border-top:1px solid var(--line-strong)}
+.ways h3{font-size:var(--t-lead);font-weight:600;font-stretch:110%;margin:0 0 var(--s2)}
+.ways p{margin:0;color:var(--muted)}
+
+/* proof — sellers' words and the cars, on one lifted ground */
+.proof{background:var(--surface)}
+.proof + .sec{border-top:0}
+.voices-head{display:flex;align-items:end;justify-content:space-between;gap:var(--s5);margin-bottom:var(--s5)}
+.voices-nav{display:flex;align-items:center;gap:var(--s4)}
+.count{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.arrows{display:flex;gap:var(--s2)}
+.arrows button{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:var(--pill);background:transparent;color:var(--text);cursor:pointer;transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.arrows button:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.45)}
+.arrows svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* reviews, Google-widget grammar on our ground: summary, then a paged track of review cards */
+.g-sum{display:flex;align-items:center;gap:var(--s4)}
+.g-logo{width:40px;height:40px;flex:none}
+.g-sum h2{margin:0 0 var(--s1)}
+.g-score{display:flex;align-items:center;gap:var(--s3);font-size:15px;color:var(--muted)}
+.g-score b{font-size:22px;font-weight:600;font-stretch:110%;color:var(--text);font-variant-numeric:tabular-nums;line-height:1}
+.g-stars{display:inline-flex;gap:2px;color:#FBBC04}
+.g-stars svg{width:16px;height:16px;fill:currentColor}
+.gtrack{--per:3;--gap:var(--s4);display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none}
+.gtrack::-webkit-scrollbar{display:none}
+.grev{scroll-snap-align:start;position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;gap:var(--s4);margin:0;padding:var(--s6);background:var(--surface-2);border:1px solid var(--line);border-top-color:var(--line-strong);border-radius:var(--radius)}
+.grev::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:0;bottom:0;width:150%;height:120%;transform:translate(-40%,55%);background:radial-gradient(closest-side,rgb(var(--glow)/.8),rgb(var(--glow)/.25) 50%,rgb(var(--glow)/0))}
+.grev header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:var(--s3)}
+.gav{width:40px;height:40px;display:grid;place-items:center;border-radius:var(--pill);background:var(--av);color:#fff;font-size:17px;font-weight:600}
+.grev header b{display:block;font-weight:600;line-height:1.3}
+.grev header span{font-size:14px;color:var(--faint)}
+.grev header .gav{font-size:17px;color:#fff}
+.grev header .g-logo{width:20px;height:20px}
+.grev p{margin:0;color:#D4D6D9;line-height:1.6}
+.grev .chip{align-self:flex-start;margin-top:auto}
+.bought{margin-top:clamp(80px,8vw,128px)}
+/* rail: a paged scroll-snap track, clipped inside .wrap; buttons page it, swipe and keys scroll it */
+.rail{--per:4;--gap:var(--s4);display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail-title{margin-bottom:var(--s5)}
+.rail-shell{position:relative}
+.side{position:absolute;z-index:2;top:calc((100% - 44px) / 2);translate:0 -50%;width:44px;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line);border-radius:var(--pill);background:rgba(11,12,14,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--muted);cursor:pointer;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease),background var(--dur) var(--ease),opacity var(--dur) var(--ease)}
+.side svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.side:hover{color:var(--text);border-color:var(--line-strong);background:rgba(11,12,14,.8)}
+.side[aria-disabled="true"]{opacity:0;pointer-events:none}
+.side-prev{left:-68px}
+.side-next{right:-68px}
+@media (max-width:1180px){.side-prev{left:12px}.side-next{right:12px}}
+.car{margin:0}
+.car:nth-child(4n+1){scroll-snap-align:start}
+.arrows button[aria-disabled="true"]{opacity:.35;cursor:default;background:transparent;border-color:var(--line-strong)}
+.car img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:var(--radius);background:var(--surface-2)}
+.car figcaption{padding-top:var(--s3);font-size:15px;font-weight:500}
+
+/* faq */
+/* ambient light pools on the dark ground (Gold Coast about-section method), cool studio blue */
+.amb{isolation:isolate;overflow:clip}
+.amb::before,.amb::after{content:"";position:absolute;z-index:-1;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgb(var(--glow)/.95),rgb(var(--glow)/.42) 45%,rgb(var(--glow)/0))}
+.amb::before{left:16%;top:34%;width:min(980px,120vw);height:760px}
+.amb::after{left:84%;top:78%;width:min(1100px,130vw);height:640px;opacity:.7}.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(40px,6vw,96px)}
+.faq-list{border-top:1px solid var(--line-strong)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:var(--s5);padding:var(--s5) 0;font-size:var(--t-lead);font-weight:500;color:var(--text);transition:color var(--dur) var(--ease)}
+.faq summary::-webkit-details-marker{display:none}
+.faq details:not([open]) summary{color:#D4D6D9}
+.faq details:not([open]) summary:hover{color:var(--text)}
+.faq summary .pm{position:relative;flex:none;width:14px;height:14px}
+.faq summary .pm::before,.faq summary .pm::after{content:"";position:absolute;left:0;top:6px;width:14px;height:2px;background:var(--muted);transition:transform var(--dur) var(--ease),background var(--dur) var(--ease)}
+.faq summary .pm::after{transform:rotate(90deg)}
+.faq summary:hover .pm::before,.faq summary:hover .pm::after{background:var(--text)}
+.faq details[open] summary .pm::after{transform:rotate(0)}
+.faq .a{padding:0 0 var(--s5);color:var(--muted);max-width:64ch}
+@supports selector(::details-content){
+  .faq details::details-content{block-size:0;overflow:hidden;opacity:0;transition:block-size 480ms var(--ease),opacity 360ms var(--ease),content-visibility 480ms allow-discrete}
+  .faq details[open]::details-content{block-size:auto;opacity:1}
+}
+.faq .a p{margin:0 0 var(--s3)}
+
+/* final */
+/* visual breaks: full width, half a screen tall, copy centred on a darkened plate */
+.vbreak{position:relative;isolation:isolate;overflow:hidden;display:grid;place-items:center;height:clamp(500px,100svh,960px);text-align:center;border-top:1px solid var(--line)}
+.vbreak + .sec{border-top:1px solid var(--line)}
+/* pin + overlay (user): a break pins to the top and the next section slides over it like a sheet */
+main > section:not(.vbreak){position:relative;z-index:1}
+:where(.sec,.final){background-color:var(--bg)}
+.vbreak{position:sticky;top:0;z-index:0}
+.vbreak + section{box-shadow:0 -28px 60px rgba(0,0,0,.55)}
+.vbreak img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+.vbreak::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 46% 34% at 50% 50%,rgba(6,6,7,.78),rgba(6,6,7,.5) 55%,rgba(6,6,7,0) 100%),linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,.55) 16%,rgba(11,12,14,.18) 40%,rgba(11,12,14,.18) 60%,rgba(11,12,14,.6) 84%,var(--bg) 100%)} /* overlay: a dark pool under the copy, fades into the page at top and bottom */
+.vbreak .wrap{display:grid;justify-items:center;gap:var(--s4)}
+.vbreak h2{font-size:clamp(28px,4.2vw,60px);max-width:24ch;text-shadow:0 2px 24px rgba(6,6,7,.6)}
+.vbreak .lead{max-width:52ch;color:#D2D5D9;text-shadow:0 1px 14px rgba(6,6,7,.8)}
+.vb-1 img{object-position:38% 62%}
+.vb-2 img{object-position:50% 60%}
+@media (max-width:640px){.vbreak{height:clamp(460px,74svh,650px)}}
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion:no-preference){
+    .js-motion .vbreak img{animation:m-vb linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
+  }
+}
+@keyframes m-vb{from{transform:translateY(-7%) scale(1.16)}to{transform:translateY(7%) scale(1.16)}}
+.final{position:relative;isolation:isolate;overflow:hidden;padding-block:clamp(120px,14vw,220px);border-top:1px solid var(--line)}
+.final-img{position:absolute;top:0;bottom:0;right:0;width:66%;z-index:-1}
+.final-img img{width:100%;height:100%;object-fit:cover;object-position:72% 60%}
+.final-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,rgba(11,12,14,.6) 14%,rgba(11,12,14,0) 34%)}
+.final h2{font-size:clamp(40px,5vw,72px);max-width:11ch}
+.final .lead{margin-top:var(--s5);max-width:32ch;color:#C3C6CB}
+.final .acts{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s7)}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding-block:var(--s7)}
+.foot .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s5)}
+.foot img{width:200px;height:auto}
+.foot address{font-style:normal;color:var(--muted);font-size:var(--t-small);line-height:1.7;text-align:right}
+.foot address .pill{margin-top:var(--s2)}
+.legal{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s2) var(--s5);padding-top:var(--s5);margin-top:var(--s2);border-top:1px solid var(--line);font-size:14px;color:var(--faint)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .hero-img{transform:translate(-50%,-4%)}
+  .fields{grid-template-columns:repeat(5,minmax(0,1fr)) auto}
+  .fields .btn{padding:0 var(--s5)}
+  .how .wrap{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .how h2{grid-column:1/-1;border-top:0;padding-top:0}
+  .rail{--per:2}
+  .car:nth-child(2n+1){scroll-snap-align:start}
+}
+@media (max-width:960px){
+  .top nav a:not(.tel):not(.cta){display:none}
+  /* hero recomposes: copy → plate → offer card in flow */
+  .hero{height:auto;background:var(--bg);overflow:visible}
+  .hero-img{position:relative;left:auto;width:auto;transform:none;z-index:0;margin-top:var(--s5)}
+  .hero-img img{aspect-ratio:16/9;object-position:50% 72%}
+  .hero-img::after{background:linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,0) 22%,rgba(11,12,14,0) 72%,var(--bg) 100%)}
+  .offer{position:relative;bottom:auto;margin-top:calc(var(--s7) * -1);z-index:1}
+
+  .offer-card{background:var(--surface)}
+  .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fields .btn{grid-column:1/-1}
+  .fields .field:nth-child(5){grid-column:1/-1}
+  .offer-head{flex-direction:column;gap:var(--s1)}
+  .buy,.why,.faq{grid-template-columns:minmax(0,1fr)}
+  .gtrack{--per:2}
+  .buy-fig{position:static;order:-1}
+  .why-fig img{aspect-ratio:3/2;object-position:50% 70%}
+  .final{padding-block:0 var(--s9)}
+  .final-img{position:relative;inset:auto;width:auto;z-index:0;margin-bottom:var(--s6)}
+  .final-img img{height:auto;aspect-ratio:16/10;object-position:62% 60%}
+  .final-img::after{background:linear-gradient(180deg,rgba(11,12,14,0) 60%,var(--bg) 100%)}
+  .foot address{text-align:left}
+}
+@media (max-width:640px){
+  /* phones: their own frame, a square crop of the portrait master; cars large, the form lands on the floor below the bumper */
+  .hero-img{margin-top:0}
+  .hero-img img{aspect-ratio:1/1;object-position:50% 100%}
+  .hero-img::after{background:linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,.35) 18%,rgba(11,12,14,0) 34%,rgba(11,12,14,0) 74%,var(--bg) 100%)}
+  .offer{margin-top:calc(var(--s6) * -1)}
+  .how .wrap{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .step{min-height:0}
+}
+@media (max-width:560px){
+  .top .wrap{height:80px}
+  .brand{width:180px}
+  .top .pill{height:34px;padding:0 14px;font-size:14px}
+  .top .cta{--h:44px;font-size:14px;position:absolute;right:0;margin-left:0}
+  .top.show-cta .cta{padding:0 var(--s4)}
+  .top nav{position:relative}
+  .top.show-cta .tel{opacity:0;visibility:hidden}
+  .top .tel{transition:opacity var(--dur) var(--ease),visibility 0s}
+  .top .wrap{height:72px}
+  .top.is-stuck .wrap{height:64px}
+  .hero-copy{padding-top:112px}
+  .offer-card{padding:var(--s4)}
+  .ways{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .rail{--gap:var(--s3)}
+  .gtrack{--per:1;--gap:var(--s3)}
+  .voices-head{flex-wrap:wrap;align-items:center;row-gap:var(--s4)}
+  .g-sum h2{font-size:18px}
+  .car figcaption{font-size:14px}
+  .final .acts .btn{width:100%}
+  .legal{flex-direction:column}
+}
+/* ---------- motion layer (motion.js) ----------
+   Hidden states exist only under .js-motion, which <head> sets only when motion is allowed and
+   removes again if motion.js never reports in. No JS, a failed script and reduced motion all get
+   the composed page exactly as designed. Only transform, translate, opacity and clip-path move. */
+@media (max-width:640px){
+  /* phone choreography: shorter lines and rungs, a lighter shutter, one-step pulls */
+  :root{--m-card-from:48px;--m-card-rise:900ms;--m-line:1000ms;--m-line-step:90ms;--m-lead:900ms;--m-lead-step:50ms;--m-row-step:70ms;--m-curtain:1200ms;--m-curtain-step:120ms;--m-curtain-scale:1.05}
+}
+@media screen and (prefers-reduced-motion:no-preference){
+  .js-motion :is(.hero h1,.lead,h2.display,.step,.step .n,.step h3):not(.m-in){opacity:0}
+  .js-motion .buy-list li:not(.m-in)>button{opacity:0}
+  .js-motion :is(.buy-fig img,.why-fig img,.car img):not(.m-in){clip-path:inset(100% 0 0 0)}
+  /* the closing backdrop has no frame to wipe: its light comes up instead */
+  .js-motion .final-img{overflow:clip}
+  .js-motion .final-img img:not(.m-in){opacity:0}
+  .m-ln{display:block;clip-path:inset(-.25em -.6em -.22em -.6em)}
+  .m-li{display:block}
+  .hero .m-ln{clip-path:inset(-.25em -.6em -.22em -.04em)} /* side entrance emerges from the column edge */
+  .js-motion .hero-img{overflow:clip}
+  /* the three steps arrive as stairs and level out */
+  .js-motion .step:nth-child(1){--pull:48px}
+  .js-motion .step:nth-child(2){--pull:96px}
+  .js-motion .step:nth-child(3){--pull:144px}
+  .js-motion .rail{--pull:56px}
+  @media (max-width:640px){
+    .js-motion .step:nth-child(n){--pull:32px}
+    .js-motion .rail{--pull:28px}
+  }
+  /* rAF fallback where scroll-driven animations are missing: motion.js writes --p */
+  .js-motion.m-sfb :is(.step,.rail){translate:0 calc((1 - var(--p,1)) * var(--pull))}
+  .js-motion.m-sfb .step::before{translate:0 calc((1 - var(--p,1)) * 24%);opacity:calc(.3 + var(--p,1) * .7)}
+}
+@media screen and (prefers-reduced-motion:no-preference) and (min-width:961px){
+  .js-motion.m-sfb .hero-img img{translate:0 calc(var(--p,0) * var(--m-drift))}
+}
+@supports (animation-timeline:view()){
+  @media screen and (prefers-reduced-motion:no-preference){
+    .js-motion .hero{view-timeline:--m-hero}
+    .js-motion .rail{animation:m-pull var(--m-ease-settle) both;animation-timeline:view();animation-range:entry 0% cover 42%}
+    .js-motion .step{view-timeline:--m-step;animation:m-pull var(--m-ease-settle) both;animation-timeline:--m-step;animation-range:entry 0% cover 42%}
+    /* the card's under-light rises with it: the step is lit as it lands */
+    .js-motion .step::before{animation:m-spill var(--m-ease-settle) both;animation-timeline:--m-step;animation-range:entry 0% cover 50%}
+  }
+  @media screen and (prefers-reduced-motion:no-preference) and (min-width:961px){
+    /* the cars stay in the studio a moment longer than the copy and the form */
+    .js-motion .hero-img img{animation:m-drift linear both;animation-timeline:--m-hero;animation-range:exit 0% exit 100%}
+  }
+}
+@keyframes m-pull{from{translate:0 var(--pull,0px)}to{translate:0 0}}
+@keyframes m-spill{from{translate:0 24%;opacity:.3}to{translate:0 0;opacity:1}}
+@keyframes m-drift{from{translate:0 0}to{translate:0 var(--m-drift)}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:0s!important}
+}
+</style>
+
+<style>
+/* anime.js layer (animejs 4.5.0): the rail becomes a draggable track only once the library is running;
+   without it the rail stays a native scroll-snap track with the scroll pager */
+.anime-on .rail-vp{overflow:hidden}
+.anime-on .rail{overflow:visible;scroll-snap-type:none;touch-action:pan-y;cursor:grab;will-change:transform}
+.anime-on .rail:active{cursor:grabbing}
+.anime-on .rail .car{user-select:none;-webkit-user-drag:none}
+.anime-on .rail img{pointer-events:none}
+</style>
+<style id="white">
+/* ================= WHITE VERSION =================
+   The client's own site: white ground, ink #262626, red #EB0014, the chrome EM badge on white.
+   The page is re-solved on white; only the hero and the two photo breaks keep the studio dark —
+   they are photographs of a dark studio, and the form card sits on them as a white sheet. */
+:root{
+  --bg:#FFFFFF;
+  --surface:#F5F5F6;
+  --surface-2:#EEEFF1;
+  --line:rgba(20,21,23,.10);
+  --line-strong:rgba(20,21,23,.20);
+  --text:#16171A;
+  --muted:#4F535A;
+  --faint:#6A6F76;
+  --glow:226 229 234;
+}
+/* dark stages: the studio photographs keep their own tokens */
+.hero,.vbreak,.final-img{
+  --bg:#0B0C0E;--surface:#131518;--surface-2:#1A1D21;
+  --line:rgba(255,255,255,.10);--line-strong:rgba(255,255,255,.20);
+  --text:#F3F3F1;--muted:#A4A8AE;--faint:#80858D;--glow:44 56 74;
+  color:var(--text);
+}
+/* the form on the studio floor is a white sheet */
+.hero .offer-card,.omodal{
+  --bg:#FFFFFF;--surface:#FFFFFF;--surface-2:#F2F3F5;
+  --line:rgba(20,21,23,.12);--line-strong:rgba(20,21,23,.22);
+  --text:#16171A;--muted:#4F535A;--faint:#6A6F76;
+  color:var(--text);
+}
+.hero .offer-card{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border-color:transparent;box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+.hero .offer .wrap::before{opacity:.55}
+.field option{background:#fff;color:var(--text)}
+.field input:focus,.field select:focus{background-color:#fff}
+.pill:hover,.arrows button:hover{background:rgba(20,21,23,.05);border-color:rgba(20,21,23,.45)}
+.hero .pill:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.45)}
+.hero .offer-card .pill:hover{background:rgba(20,21,23,.05);border-color:rgba(20,21,23,.45)}
+
+/* header: a white bar, like the client's own */
+.top,.top.is-stuck{background:#fff;-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);border-bottom-color:var(--line)}
+.top .wrap{height:88px}
+.top.is-stuck .wrap{height:72px}
+.brand{width:clamp(210px,19vw,250px)}
+.hero-copy{padding-top:clamp(136px,11vw,184px)}
+
+/* ambient light pools and card spills are a dark-ground device; on white they are gone */
+.amb::before,.amb::after,.step::before,.grev::before{display:none}
+.why-fig::before{display:none}
+.step,.grev{border-top-color:var(--line)}
+.step .n{color:var(--red)}
+.grev{background:#fff}
+.grev p{color:#2C2F34}
+.faq details:not([open]) summary{color:#2C2F34}
+.side{background:rgba(255,255,255,.9);color:var(--text);border-color:var(--line-strong)}
+.side:hover{background:#fff}
+.final .lead{color:var(--muted)}
+.vbreak + section{box-shadow:0 -28px 60px rgba(0,0,0,.25)}
+/* breaks: the dark plate stays for the type, the fade into the page ground goes */
+.vbreak::before{background:radial-gradient(ellipse 46% 34% at 50% 50%,rgba(6,6,7,.78),rgba(6,6,7,.5) 55%,rgba(6,6,7,0) 100%),linear-gradient(180deg,rgba(6,6,7,.35),rgba(6,6,7,.15) 40%,rgba(6,6,7,.35))}
+.vbreak{border-top:0}
+.final-img{width:56%}
+.final-img::after{display:none}
+.final .btn-line{color:var(--text)}
+
+/* drawer: white panel; the photo stays above the headline instead of under it */
+.omodal .om-card{background:#fff;border-left-color:var(--line)}
+.om-photo img{-webkit-mask:none;mask:none}
+.om-body{margin-top:0;padding-top:var(--s5)}
+.omodal .om-x{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(6,6,7,.45)}
+.omodal .om-x:hover{border-color:rgba(255,255,255,.7);background:rgba(6,6,7,.7)}
+.om-foot{background:#fff}
+.omodal::backdrop{background:rgba(20,21,23,.45)}
+
+@media (max-width:960px){
+  .hero{background:#0B0C0E}
+  .final-img{width:auto}
+}
+@media (max-width:560px){
+  .top .wrap{height:72px}
+  .brand{width:190px}
+  .hero-copy{padding-top:120px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Exotic Motors Midwest"><img src="assets/logo-dark.png" alt="Exotic Motors Midwest" width="600" height="150"></a>
+    <nav aria-label="Page">
+      <a href="#how">How it works</a>
+      <a href="#buy">What we buy</a>
+      <a href="#faq">FAQ</a>
+      <a class="pill tel" href="tel:+18166088579">(816) 608-8579</a>
+      <a class="btn btn-red cta" href="#offer" data-modal aria-haspopup="dialog" aria-controls="omodal">Get my offer</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="h1">
+    <div class="wrap hero-copy">
+      <h1 id="h1" class="display">Sell your Porsche, AMG or&nbsp;M</h1>
+      <p class="lead">Exotic Motors Midwest buys enthusiast and luxury cars, from a weekend 911 to a garage-kept Ferrari. Tell us what you drive and we'll come back with an offer.</p>
+    </div>
+    <div class="hero-img"><picture><source media="(max-width:640px)" srcset="assets/gen-hero-mobile.jpg" width="1200" height="1607"><img src="assets/gen-hero-trio.jpg" alt="Silver Porsche 911 Turbo S, orange Mercedes-AMG GT Black Series and blue BMW M8 Competition in a dark concrete studio" width="2400" height="1610"></picture></div>
+
+    <div class="offer" id="offer">
+      <div class="wrap">
+        <form class="offer-card" novalidate>
+          <div class="offer-head">
+            <h2>Get your offer</h2>
+            <p>Takes a minute. Prefer to talk? <a class="pill" href="tel:+18166088579">(816) 608-8579</a></p>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label for="f-year">Year</label>
+              <select id="f-year" name="year" required><option value="" selected disabled hidden></option></select>
+            </div>
+            <div class="field">
+              <label for="f-make">Make</label>
+              <input id="f-make" name="make" list="makes" autocomplete="off" required>
+              <datalist id="makes">
+                <option value="Porsche"><option value="Mercedes-AMG"><option value="Mercedes-Benz"><option value="BMW M"><option value="BMW"><option value="Audi"><option value="Ferrari"><option value="Lamborghini"><option value="McLaren"><option value="Bentley"><option value="Rolls-Royce"><option value="Aston Martin"><option value="Land Rover">
+              </datalist>
+            </div>
+            <div class="field">
+              <label for="f-model">Model</label>
+              <input id="f-model" name="model" autocomplete="off" required>
+            </div>
+            <div class="field">
+              <label for="f-miles">Mileage</label>
+              <input id="f-miles" name="mileage" inputmode="numeric" required>
+            </div>
+            <div class="field">
+              <label for="f-vin">VIN <span>(optional)</span></label>
+              <input id="f-vin" name="vin" maxlength="17" autocomplete="off" spellcheck="false">
+            </div>
+            <button class="btn btn-red" type="submit">Get my offer</button>
+          </div>
+          <div class="offer-done" role="status">
+            <p><strong>Thanks, we have your car.</strong> A specialist will be in touch with next steps.</p>
+            <button class="btn btn-line" type="button" data-reset>Add another car</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec how" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <h2 id="how-h" class="display h-sm">How it works</h2>
+      <ol class="steps" role="list">
+        <li class="step">
+          <span class="n" aria-hidden="true">1</span><h3>Tell us about<br>your car</h3>
+          <p>Year, make, model and mileage. Add the VIN, options and photos if you have them. The more we know, the sharper the offer.</p>
+        </li>
+        <li class="step">
+          <span class="n" aria-hidden="true">2</span><h3>We make<br>an offer</h3>
+          <p>A specialist looks at your car against the current market and calls you to talk it through.</p>
+        </li>
+        <li class="step">
+          <span class="n" aria-hidden="true">3</span><h3>Agree, sign,<br>get paid</h3>
+          <p>If the number works for you, we inspect the car, handle the paperwork with you and complete the sale.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="buy" aria-labelledby="buy-h">
+    <div class="wrap buy">
+      <div>
+        <h2 id="buy-h" class="display h2">German performance to Italian exotics</h2>
+        <ul class="buy-list">
+          <li><button type="button" data-make="Porsche"><span class="name">Porsche 911 &amp; GT</span><span class="sub">Carrera, Turbo, GT3, GT4, Cayenne, Macan</span><span class="go">Get an offer</span></button></li>
+          <li><button type="button" data-make="Mercedes-AMG"><span class="name">Mercedes-AMG</span><span class="sub">C 63, E 63, GT, S-Class AMG</span><span class="go">Get an offer</span></button></li>
+          <li><button type="button" data-make="BMW M"><span class="name">BMW M</span><span class="sub">M2, M3, M4, M5, X5 M, X6 M</span><span class="go">Get an offer</span></button></li>
+          <li><button type="button" data-make="Mercedes-Benz" data-model="G-Class"><span class="name">G-Wagon &amp; luxury SUV</span><span class="sub">G 550, G 63, Range Rover, Urus</span><span class="go">Get an offer</span></button></li>
+          <li><button type="button" data-make="Ferrari"><span class="name">Exotic &amp; collector</span><span class="sub">Ferrari, Lamborghini, McLaren, Bentley</span><span class="go">Get an offer</span></button></li>
+        </ul>
+        <p class="buy-note">Don't see your car? Send it anyway. If it's interesting, we want to hear about&nbsp;it.</p>
+      </div>
+      <figure class="buy-fig">
+        <img class="m" src="assets/gen-911.jpg" alt="Red Porsche 911 in a dark concrete studio" width="1800" height="1208" loading="lazy">
+        <img class="s1" src="assets/gen-amg.jpg" alt="Graphite Mercedes-AMG GT in a dark concrete studio" width="1800" height="1051" loading="lazy">
+        <img class="s2" src="assets/16m.jpg" alt="White Ferrari 430 Scuderia Spider 16M against a red studio wall" width="2000" height="1333" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <section class="vbreak vb-1" aria-labelledby="vb1-h">
+    <img src="assets/vb-16m.jpg" alt="" width="2800" height="1867" loading="lazy">
+    <div class="wrap">
+      <h2 id="vb1-h" class="display">More than 20 years in<br>exotic and collector cars</h2>    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="why-h">
+    <div class="wrap why">
+      <figure class="why-fig">
+        <img src="assets/speciale-detail.jpg" alt="Rear light and carbon diffuser of a silver Ferrari 458 Speciale A" width="1600" height="1067" loading="lazy" style="object-position:42% 55%">
+      </figure>
+      <div>
+        <h2 id="why-h" class="display h2">Valued by people who trade cars like&nbsp;yours</h2>
+        <p class="lead">Exotic Motors Midwest is led by Danny Baker, with more than 20 years in the exotic and collector car trade. We know what makes one example worth more than the next: originality, history and specification. We price it that way, not by a <span class="nw">trade-in</span> formula.</p>
+        <ul class="ways">
+          <li>
+            <h3>Sell outright</h3>
+            <p>We make you an offer. If you accept, we buy the car and complete the paperwork with you.</p>
+          </li>
+          <li>
+            <h3>Consign with us</h3>
+            <p>We market, show and negotiate. Your car waits in our showroom with 24/7 security and climate control, and the commission is agreed up front.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec proof" aria-labelledby="rev-h">
+    <div class="wrap">
+      <div class="voices-head">
+        <div class="g-sum">
+          <svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+          <div>
+            <h2 id="rev-h" class="display h-sm">Google reviews</h2>
+            <div class="g-score"><b>5.0</b><span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span></div>
+          </div>
+        </div>
+        <div class="voices-nav">
+          <span class="count" aria-hidden="true"><span data-gcur>01</span> / <span data-gtot>02</span></span>
+          <div class="arrows">
+            <button type="button" data-gprev aria-controls="greviews" aria-label="Previous reviews" aria-disabled="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+            <button type="button" data-gnext aria-controls="greviews" aria-label="Next reviews"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <!-- SAMPLE REVIEWS: simulated for the mockup (names, dates, rating). Replace with the dealer's real Google reviews before launch. -->
+      <div class="gtrack" id="greviews" role="region" aria-labelledby="rev-h" tabindex="0">
+          <article class="grev">
+            <header><span class="gav" style="--av:#6D4C9F" aria-hidden="true">M</span><div><b>Mark T.</b><span>2 weeks ago</span></div><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></header>
+            <span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span>
+            <p>Got a fair number on my 911 without the back-and-forth. Danny knew the car better than the last two dealers I talked to, and the whole thing was done in a couple of days.</p>
+            <span class="chip">Sold a Porsche 911 Carrera S</span>
+          </article>
+          <article class="grev">
+            <header><span class="gav" style="--av:#2F7D6D" aria-hidden="true">J</span><div><b>Jason R.</b><span>1 month ago</span></div><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></header>
+            <span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span>
+            <p>Sold my C 63 here after getting lowball trade offers elsewhere. Straight answers, no games, and they handled the payoff with my bank.</p>
+            <span class="chip">Sold a Mercedes-AMG C 63</span>
+          </article>
+          <article class="grev">
+            <header><span class="gav" style="--av:#B5562B" aria-hidden="true">S</span><div><b>Steve M.</b><span>1 month ago</span></div><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></header>
+            <span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span>
+            <p>I consigned my Ferrari with them. They presented it properly, kept me updated every step, and it sold for more than I expected.</p>
+            <span class="chip">Consigned a Ferrari</span>
+          </article>
+          <article class="grev">
+            <header><span class="gav" style="--av:#3D6FB0" aria-hidden="true">K</span><div><b>Kevin L.</b><span>2 months ago</span></div><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></header>
+            <span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span>
+            <p>Sent the VIN and a few photos of my M4 on a Monday, had a real offer by Tuesday. No pressure, and the number held at inspection.</p>
+            <span class="chip">Sold a BMW M4 Competition</span>
+          </article>
+          <article class="grev">
+            <header><span class="gav" style="--av:#8C3B57" aria-hidden="true">A</span><div><b>Andrea P.</b><span>3 months ago</span></div><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></header>
+            <span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span>
+            <p>We were nervous selling my husband's G 63 online. They walked us through the paperwork and made it easy from start to finish.</p>
+            <span class="chip">Sold a Mercedes-AMG G 63</span>
+          </article>
+          <article class="grev">
+            <header><span class="gav" style="--av:#5B6B2E" aria-hidden="true">D</span><div><b>David H.</b><span>4 months ago</span></div><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg></header>
+            <span class="g-stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20"><path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span>
+            <p>Second car I have sold to Exotic Motors Midwest. Same people, same straight dealing. Easiest sale I have done.</p>
+            <span class="chip">Sold a Porsche Cayenne Turbo</span>
+          </article>
+      </div>
+
+      <div class="bought">
+        <h2 id="rail-h" class="display h-sm rail-title">Recently purchased</h2>
+        <div class="rail-shell">
+          <button type="button" class="side side-prev" data-rprev aria-controls="rail" aria-label="Previous cars" aria-disabled="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+          <button type="button" class="side side-next" data-rnext aria-controls="rail" aria-label="Next cars"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+        <div class="rail-vp"><div class="rail" id="rail" role="region" aria-labelledby="rail-h" tabindex="0">
+          <figure class="car"><img src="assets/scuderia-spider.jpg" alt="Red Ferrari 430 Scuderia Spider 16M in profile" width="1200" height="800" loading="lazy"><figcaption>Ferrari 430 Scuderia Spider 16M</figcaption></figure>
+          <figure class="car"><img src="assets/huracan.jpg" alt="Matte white Lamborghini Huracán, front view" width="1200" height="800" loading="lazy"><figcaption>Lamborghini Huracán</figcaption></figure>
+          <figure class="car"><img src="assets/488.jpg" alt="Black Ferrari 488, front three-quarter" width="1200" height="800" loading="lazy"><figcaption>Ferrari 488</figcaption></figure>
+          <figure class="car"><img src="assets/bentley.jpg" alt="White Bentley Continental GT Supersports" width="1200" height="800" loading="lazy"><figcaption>Bentley Continental GT</figcaption></figure>
+          <figure class="car"><img src="assets/rail-speciale.jpg" alt="Silver Ferrari 458 Speciale A in a dark studio" width="1200" height="800" loading="lazy"><figcaption>Ferrari 458 Speciale A</figcaption></figure>
+          <figure class="car"><img src="assets/rail-tdf.jpg" alt="Grey Ferrari F12tdf in profile in a concrete studio" width="1200" height="800" loading="lazy"><figcaption>Ferrari F12tdf</figcaption></figure>
+          <figure class="car"><img src="assets/rail-458-spider.jpg" alt="Matte white Ferrari 458 Spider from above" width="1200" height="800" loading="lazy"><figcaption>Ferrari 458 Spider</figcaption></figure>
+          <figure class="car"><img src="assets/rail-huracan-black.jpg" alt="Black Lamborghini Huracán, front view" width="900" height="600" loading="lazy"><figcaption>Lamborghini Huracán</figcaption></figure>
+        </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vbreak vb-2" aria-labelledby="vb2-h">
+    <img src="assets/vb-tdf.jpg" alt="" width="2800" height="1824" loading="lazy">
+    <div class="wrap">
+      <h2 id="vb2-h" class="display">Ferrari, Lamborghini,<br>McLaren and Bentley, too</h2>
+    </div>
+  </section>
+
+  <section class="sec amb" id="faq" aria-labelledby="faq-h">
+    <div class="wrap faq">
+      <div>
+        <h2 id="faq-h" class="display h2">Questions sellers ask</h2>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>What are the steps to sell my car? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Fill out the form with your car's details. Photos and the original window sticker help if you have them. A specialist reviews it and calls you with an offer. If you accept, we arrange the inspection and complete the paperwork together.</p></div>
+        </details>
+        <details>
+          <summary>What information gives the most accurate offer? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>The VIN, current mileage, options and packages, service history, any paint or bodywork, and clear photos of the exterior, interior and wheels.</p></div>
+        </details>
+        <details>
+          <summary>How quickly do I get paid? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Placeholder answer: confirm the dealer's payment timing before launch.</p></div>
+        </details>
+        <details>
+          <summary>What if my car is leased or financed? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Placeholder answer: confirm how the dealer handles payoffs and lease buyouts before launch.</p></div>
+        </details>
+        <details>
+          <summary>Do you only buy exotics? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>No. We buy Porsche, Mercedes-AMG, BMW M, G-Wagons and other luxury and performance cars, as well as exotics and collector cars.</p></div>
+        </details>
+        <details>
+          <summary>Can I consign instead of selling outright? <span class="pm" aria-hidden="true"></span></summary>
+          <div class="a"><p>Yes. We handle marketing, showing and negotiation, and your car is kept in our showroom with 24/7 security and climate control. Our commission is agreed up front and deducted at the sale.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="fin-h">
+    <div class="final-img"><img src="assets/speciale.jpg" alt="" width="2000" height="1267" loading="lazy"></div>
+    <div class="wrap">
+      <h2 id="fin-h" class="display">Talk to a specialist</h2>
+      <p class="lead">Send your car's details with the form, or call and speak to the team directly.</p>
+      <div class="acts">
+        <a class="btn btn-red" href="#offer" data-focus>Get my offer</a>
+        <a class="btn btn-line" href="tel:+18166088579">Call (816) 608-8579</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog class="omodal" id="omodal" aria-labelledby="om-h">
+  <form class="offer-card om-card" novalidate>
+    <button class="om-x" type="button" data-mclose aria-label="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13"/></svg></button>
+    <figure class="om-photo" aria-hidden="true"><img src="assets/tdf-interior.jpg" alt="" width="1600" height="1067" loading="lazy" decoding="async"></figure>
+    <div class="om-body">
+      <div class="offer-head">
+        <h2 id="om-h" class="display">Get your offer</h2>
+        <p>Takes a minute. A specialist looks at your car against the current market and calls you.</p>
+      </div>
+      <fieldset class="om-group">
+        <legend>The car</legend>
+        <div class="fields">
+          <div class="field"><label for="m-year">Year</label><select id="m-year" name="year" required><option value="" selected disabled hidden></option></select></div>
+          <div class="field"><label for="m-make">Make</label><input id="m-make" name="make" list="makes" autocomplete="off" required></div>
+          <div class="field wide"><label for="m-model">Model</label><input id="m-model" name="model" autocomplete="off" required></div>
+        </div>
+      </fieldset>
+      <fieldset class="om-group">
+        <legend>Mileage and VIN</legend>
+        <div class="fields">
+          <div class="field"><label for="m-miles">Mileage</label><input id="m-miles" name="mileage" inputmode="numeric" required></div>
+          <div class="field"><label for="m-vin">VIN <span>(optional)</span></label><input id="m-vin" name="vin" maxlength="17" autocomplete="off" spellcheck="false"></div>
+        </div>
+      </fieldset>
+      <div class="offer-done" role="status">
+        <p><strong>Thanks, we have your car.</strong> A specialist will be in touch with next steps.</p>
+        <button class="btn btn-line" type="button" data-mreset>Add another car</button>
+      </div>
+    </div>
+    <div class="om-foot">
+      <button class="btn btn-red" type="submit">Get my offer</button>
+      <p>Prefer to talk? <a class="pill" href="tel:+18166088579">(816) 608-8579</a></p>
+    </div>
+  </form>
+</dialog>
+
+<footer class="foot">
+  <div class="wrap">
+    <img src="assets/logo-dark.png" alt="Exotic Motors Midwest" width="600" height="150" loading="lazy">
+    <address>
+      Exotic Motors Midwest, LLC<br>
+      1 E 135th Street, Kansas City, MO 64145<br>
+      <a class="pill" href="tel:+18166088579">(816) 608-8579</a>
+    </address>
+    <div class="legal"><span>© 2026 Exotic Motors Midwest, LLC</span><!-- Generated artwork: hero + What-we-buy Porsche/AMG (see assets/gen-provenance.json). On-page disclosure removed at the agency's request. --><span>Powered by All Auto Network</span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const form = document.querySelector('.offer-card');
+  const offer = document.getElementById('offer');
+  const year = document.getElementById('f-year');
+  const make = document.getElementById('f-make');
+  const model = document.getElementById('f-model');
+  const now = new Date().getFullYear() + 1;
+  for (let y = now; y >= 1960; y--) year.add(new Option(y, y));
+
+  // offer drawer for the header CTA
+  const modal = document.getElementById('omodal');
+  if (modal && modal.showModal) {
+    const mForm = modal.querySelector('form');
+    const mYear = document.getElementById('m-year');
+    for (let y = now; y >= 1960; y--) mYear.add(new Option(y, y));
+    const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let opener = null;
+    const openModal = (from) => { opener = from || null; modal.classList.remove('is-closing'); modal.showModal(); mYear.focus(); };
+    modal.addEventListener('close', () => { if (opener) opener.focus({ preventScroll: true }); });
+    const closeModal = () => {
+      if (!modal.open || modal.classList.contains('is-closing')) return;
+      if (reduce()) { modal.close(); return; }
+      modal.classList.add('is-closing');
+      setTimeout(() => { modal.classList.remove('is-closing'); modal.close(); }, 280);
+    };
+    document.querySelectorAll('[data-modal]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openModal(a); }));
+    modal.querySelector('[data-mclose]').addEventListener('click', closeModal);
+    modal.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); });           // Esc
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });        // click on the backdrop
+    mForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bad = [...mForm.querySelectorAll('[required]')].find((f) => !f.value.trim());
+      if (bad) { bad.focus(); bad.reportValidity(); return; }
+      modal.classList.add('is-done');
+      modal.querySelector('[data-mreset]').focus();
+    });
+    modal.querySelector('[data-mreset]').addEventListener('click', () => { mForm.reset(); modal.classList.remove('is-done'); mYear.focus(); });
+  }
+
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let runBeam = () => {};
+  if (!still && CSS.supports('(--a: 0deg)')) {
+    const beam = document.createElement('span');
+    beam.className = 'beam'; beam.setAttribute('aria-hidden', 'true');
+    form.appendChild(beam);
+    runBeam = () => { beam.classList.remove('run'); void beam.offsetWidth; beam.classList.add('run'); };
+    setTimeout(runBeam, 1100);
+  }
+
+  const goToForm = (focusEl) => {
+    offer.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
+    setTimeout(() => { focusEl.focus({preventScroll: true}); runBeam(); }, 450);
+  };
+
+  document.querySelectorAll('[data-make]').forEach(b => b.addEventListener('click', () => {
+    make.value = b.dataset.make;
+    model.value = b.dataset.model || '';
+    goToForm(year);
+  }));
+  document.querySelectorAll('[data-focus]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault(); goToForm(year);
+  }));
+
+  const top = document.querySelector('.top');
+  const onScroll = () => top.classList.toggle('is-stuck', scrollY > 24);
+  // header CTA shows only while the offer card is off screen
+  new IntersectionObserver(([e]) => top.classList.toggle('show-cta', !e.isIntersecting && e.boundingClientRect.top < innerHeight), { threshold: 0 })
+    .observe(document.querySelector('.offer-card'));
+  addEventListener('scroll', onScroll, {passive: true}); onScroll();
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const bad = [...form.querySelectorAll('[required]')].find(f => !f.value.trim());
+    if (bad) { bad.focus(); bad.reportValidity(); return; }
+    offer.classList.add('is-done');
+  });
+  form.querySelector('[data-reset]').addEventListener('click', () => {
+    form.reset(); offer.classList.remove('is-done'); year.focus();
+  });
+
+  // paged scroll-snap tracks ("Google reviews", "Recently purchased"): native scroll for swipe/keys,
+  // buttons move one page, the count follows the scroll position.
+  const pad = (n) => String(n).padStart(2, '0');
+  const pager = (track, prev, next, cur, tot) => {
+    const geo = () => {
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      const card = track.firstElementChild.getBoundingClientRect().width;
+      const per = Math.max(1, Math.round((track.clientWidth + gap) / (card + gap)));
+      return {stride: track.clientWidth + gap, pages: Math.ceil(track.children.length / per), max: track.scrollWidth - track.clientWidth};
+    };
+    let page = 0;
+    const sync = () => {
+      const g = geo();
+      page = Math.min(g.pages - 1, Math.round(track.scrollLeft / g.stride));
+      if (cur) cur.textContent = pad(page + 1);
+      if (tot) tot.textContent = pad(g.pages);
+      prev.setAttribute('aria-disabled', String(track.scrollLeft <= 1));
+      next.setAttribute('aria-disabled', String(track.scrollLeft >= g.max - 1));
+    };
+    const go = (n) => {
+      const g = geo();
+      const to = Math.min(g.max, Math.max(0, Math.min(g.pages - 1, n)) * g.stride);
+      if (window.emGlide) window.emGlide(track, to);
+      else track.scrollTo({left: to, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+    };
+    prev.addEventListener('click', () => { if (prev.getAttribute('aria-disabled') !== 'true') go(page - 1); });
+    next.addEventListener('click', () => { if (next.getAttribute('aria-disabled') !== 'true') go(page + 1); });
+    track.addEventListener('scroll', sync, {passive: true});
+    addEventListener('resize', sync);
+    sync();
+  };
+  const $q = (s) => document.querySelector(s);
+  pager($q('#greviews'), $q('[data-gprev]'), $q('[data-gnext]'), $q('[data-gcur]'), $q('[data-gtot]'));
+  const rail = document.getElementById('rail');
+  pager(rail, $q('[data-rprev]'), $q('[data-rnext]'), $q('[data-rcur]'), $q('[data-rtot]')); // fallback; anime.js takes over when it loads
+  // if the anime.js module never arrives, nothing it would reveal stays hidden
+  setTimeout(() => { if (!document.documentElement.classList.contains('anime-on')) document.querySelectorAll('.hero h1, .hero .lead, .step, .step .n, .step h3').forEach((e) => e.classList.add('m-in')); }, 2500);
+  // load the off-page cars before anyone pages to them
+  new IntersectionObserver(([e], o) => {
+    if (!e.isIntersecting) return;
+    rail.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
+    o.disconnect();
+  }, {rootMargin: '800px 0px'}).observe(rail);
+})();
+</script>
+<script src="motion.js" defer onerror="document.documentElement.classList.remove('js-motion')"></script>
+
+<script type="module">
+import { animate, splitText, stagger, spring, createDraggable, utils } from 'https://cdn.jsdelivr.net/npm/animejs@4.5.0/+esm';
+
+const root = document.documentElement;
+root.classList.add('anime-on');
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motion = root.classList.contains('js-motion') && !still;
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
+/* anime.js layer — user-approved after the A/B lab (2026-11-14) */
+
+/* 1. HERO — characters rise inside their line masks on a spring; lines cascade as a staircase */
+const h1 = $('.hero h1'), lead = $('.hero .lead');
+if (motion) {
+  // split.addEffect: v4 splits lines after fonts load, so animate inside the effect (plays once)
+  let h1Played = false, leadPlayed = false;
+  splitText(h1, { lines: { wrap: 'clip' }, chars: true }).addEffect(({ chars }) => {
+    h1.classList.add('m-in');
+    if (h1Played || !chars.length) return;
+    h1Played = true;
+    utils.set(chars, { y: '115%', x: '-.35em', opacity: 0 });
+    return animate(chars, { y: '0%', x: '0em', opacity: 1, ease: spring({ bounce: .22, duration: 620 }), delay: stagger(16) });
+  });
+  splitText(lead, { lines: { wrap: 'clip' } }).addEffect(({ lines }) => {
+    lead.classList.add('m-in');
+    if (leadPlayed || !lines.length) return;
+    leadPlayed = true;
+    utils.set(lines, { x: '-104%' });
+    return animate(lines, { x: '0%', ease: spring({ bounce: 0, duration: 760 }), delay: stagger(90, { start: 420 }) });
+  });
+} else { h1.classList.add('m-in'); lead.classList.add('m-in'); }
+
+/* 2. STEP CARDS — float up from below on a spring, one rung after another */
+const cards = $$('.step');
+const inner = cards.flatMap((c) => $$('.n, h3', c));
+if (motion) {
+  utils.set(cards, { y: 110, opacity: 0 });
+  cards.forEach((c) => c.classList.add('m-in')); inner.forEach((e) => e.classList.add('m-in'));
+  new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    animate(cards, { y: 0, opacity: { to: 1, duration: 500, ease: 'out(2)' }, ease: spring({ bounce: .3, duration: 900 }), delay: stagger(190) });
+  }, { rootMargin: '0px 0px -12% 0px' }).observe($('.how'));
+} else { cards.forEach((c) => c.classList.add('m-in')); inner.forEach((e) => e.classList.add('m-in')); }
+
+/* 3. RAIL — drag with inertia, snaps by page, released on a spring; arrows glide the same track */
+const rail = $('#rail'), vp = $('.rail-vp');
+// replace the arrows to drop the native-scroll pager's listeners
+const [prev, next] = ['[data-rprev]', '[data-rnext]'].map((s) => { const b = $(s); const c = b.cloneNode(true); b.replaceWith(c); return c; });
+rail.scrollLeft = 0;
+const geo = () => {
+  const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+  const card = rail.firstElementChild.getBoundingClientRect().width;
+  const per = Math.max(1, Math.round((vp.clientWidth + gap) / (card + gap)));
+  const pages = Math.ceil(rail.children.length / per);
+  const stride = per * (card + gap);
+  const max = Math.max(0, rail.children.length * (card + gap) - gap - vp.clientWidth);
+  return { stride, pages, max };
+};
+// the track is a grid of fixed columns; give it its real width so it can be dragged
+rail.style.width = 'max-content';
+const fit = () => { const g = parseFloat(getComputedStyle(rail).columnGap) || 0; const per = parseInt(getComputedStyle(rail).getPropertyValue('--per'), 10) || 4; const w = (vp.clientWidth - (per - 1) * g) / per; rail.style.gridAutoColumns = w + 'px'; };
+fit();
+const sync = (x) => {
+  const { stride, max } = geo();
+  prev.setAttribute('aria-disabled', String(x >= -1));
+  next.setAttribute('aria-disabled', String(x <= -max + 1));
+};
+const drag = createDraggable(rail, {
+  container: () => [0, 0, 0, -geo().max],
+  x: { snap: () => geo().stride },
+  y: false,
+  releaseEase: still ? 'out(3)' : spring({ bounce: .18, duration: 700 }),
+  velocityMultiplier: 1.4,
+  containerFriction: .6,
+  onUpdate: (self) => sync(self.x),
+  onSettle: (self) => sync(self.x),
+  onResize: () => fit(),
+  onAfterResize: (self) => self.setX(Math.max(-geo().max, utils.snap(self.x, geo().stride))),
+});
+const glide = (dir) => {
+  const { stride, max } = geo();
+  const to = Math.max(-max, Math.min(0, utils.snap(drag.x, stride) - dir * stride));
+  const p = { x: drag.x };
+  animate(p, { x: to, ease: still ? 'linear' : spring({ bounce: .12, duration: 760 }), duration: still ? 0 : undefined, onUpdate: () => drag.setX(p.x), onComplete: () => sync(to) });
+};
+prev.addEventListener('click', () => { if (prev.getAttribute('aria-disabled') !== 'true') glide(-1); });
+next.addEventListener('click', () => { if (next.getAttribute('aria-disabled') !== 'true') glide(1); });
+sync(0);
+</script>
+</body>
+</html>
