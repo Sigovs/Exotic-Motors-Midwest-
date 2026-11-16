@@ -107,6 +107,10 @@ p{text-wrap:pretty}
 .brand{display:block;width:clamp(200px,20vw,260px)}
 .brand img{width:100%;height:auto}
 .top nav{display:flex;align-items:center;gap:var(--s6)}
+/* header CTA: appears once the form has left the screen, so the first screen never shows two identical actions */
+.top .cta{--h:44px;max-width:0;padding:0;margin-left:calc(var(--s6) * -1);overflow:hidden;white-space:nowrap;font-size:15px;opacity:0;visibility:hidden;transition:max-width 320ms var(--ease),padding 320ms var(--ease),margin 320ms var(--ease),opacity var(--dur) var(--ease),visibility 0s linear 320ms,background var(--dur) var(--ease)}
+.top.show-cta .cta{max-width:220px;padding:0 var(--s5);margin-left:0;opacity:1;visibility:visible;transition:max-width 320ms var(--ease),padding 320ms var(--ease),margin 320ms var(--ease),opacity var(--dur) var(--ease) 80ms,visibility 0s,background var(--dur) var(--ease)}
+
 .top nav a{font-size:15px;font-weight:500;text-decoration:none;color:var(--muted);transition:color var(--dur) var(--ease)}
 .top nav a:hover{color:var(--text)}
 
@@ -196,6 +200,7 @@ section{position:relative}
 /* why us — one detail, read closely */
 .why{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(40px,7vw,120px);align-items:center}
 .why-fig{margin:0;position:relative;isolation:isolate}
+section:has(> .why){overflow-x:clip} /* the ambilight may spill past the viewport on phones */
 /* ambilight: the photo's own colours, blurred, spill onto the ground behind it */
 .why-fig::before{content:"";position:absolute;z-index:-1;inset:-9% -12% -6% -12%;pointer-events:none;background:url(assets/speciale-detail.jpg) 42% 55%/cover no-repeat;filter:blur(80px) saturate(1.4) brightness(.8);opacity:.42;transform:translateZ(0)}
 .why-fig img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius)}
@@ -327,13 +332,14 @@ main > section:not(.vbreak){position:relative;z-index:1}
   .car:nth-child(2n+1){scroll-snap-align:start}
 }
 @media (max-width:960px){
-  .top nav a:not(.tel){display:none}
+  .top nav a:not(.tel):not(.cta){display:none}
   /* hero recomposes: copy → plate → offer card in flow */
   .hero{height:auto;background:var(--bg);overflow:visible}
   .hero-img{position:relative;left:auto;width:auto;transform:none;z-index:0;margin-top:var(--s5)}
   .hero-img img{aspect-ratio:16/9;object-position:50% 72%}
   .hero-img::after{background:linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,0) 22%,rgba(11,12,14,0) 72%,var(--bg) 100%)}
   .offer{position:relative;bottom:auto;margin-top:calc(var(--s7) * -1);z-index:1}
+
   .offer-card{background:var(--surface)}
   .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fields .btn{grid-column:1/-1}
@@ -350,6 +356,11 @@ main > section:not(.vbreak){position:relative;z-index:1}
   .foot address{text-align:left}
 }
 @media (max-width:640px){
+  /* phones: their own frame, a square crop of the portrait master; cars large, the form lands on the floor below the bumper */
+  .hero-img{margin-top:0}
+  .hero-img img{aspect-ratio:1/1;object-position:50% 100%}
+  .hero-img::after{background:linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,.35) 18%,rgba(11,12,14,0) 34%,rgba(11,12,14,0) 74%,var(--bg) 100%)}
+  .offer{margin-top:calc(var(--s6) * -1)}
   .how .wrap{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
   .step{min-height:0}
 }
@@ -357,6 +368,11 @@ main > section:not(.vbreak){position:relative;z-index:1}
   .top .wrap{height:80px}
   .brand{width:180px}
   .top .pill{height:34px;padding:0 14px;font-size:14px}
+  .top .cta{--h:44px;font-size:14px;position:absolute;right:0;margin-left:0}
+  .top.show-cta .cta{padding:0 var(--s4)}
+  .top nav{position:relative}
+  .top.show-cta .tel{opacity:0;visibility:hidden}
+  .top .tel{transition:opacity var(--dur) var(--ease),visibility 0s}
   .top .wrap{height:72px}
   .top.is-stuck .wrap{height:64px}
   .hero-copy{padding-top:112px}
@@ -448,6 +464,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
       <a href="#buy">What we buy</a>
       <a href="#faq">FAQ</a>
       <a class="pill tel" href="tel:+18166088579">(816) 608-8579</a>
+      <a class="btn btn-red cta" href="#offer" data-focus>Get my offer</a>
     </nav>
   </div>
 </header>
@@ -458,7 +475,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
       <h1 id="h1" class="display">Sell your Porsche, AMG or&nbsp;M</h1>
       <p class="lead">Exotic Motors Midwest buys enthusiast and luxury cars, from a weekend 911 to a garage-kept Ferrari. Tell us what you drive and we'll come back with an offer.</p>
     </div>
-    <div class="hero-img"><img src="assets/gen-hero-trio.jpg" alt="Silver Porsche 911 Turbo S, orange Mercedes-AMG GT Black Series and blue BMW M8 Competition in a dark concrete studio" width="2400" height="1610"></div>
+    <div class="hero-img"><picture><source media="(max-width:640px)" srcset="assets/gen-hero-mobile.jpg" width="1200" height="1607"><img src="assets/gen-hero-trio.jpg" alt="Silver Porsche 911 Turbo S, orange Mercedes-AMG GT Black Series and blue BMW M8 Competition in a dark concrete studio" width="2400" height="1610"></picture></div>
 
     <div class="offer" id="offer">
       <div class="wrap">
@@ -751,6 +768,9 @@ main > section:not(.vbreak){position:relative;z-index:1}
 
   const top = document.querySelector('.top');
   const onScroll = () => top.classList.toggle('is-stuck', scrollY > 24);
+  // header CTA shows only while the offer card is off screen
+  new IntersectionObserver(([e]) => top.classList.toggle('show-cta', !e.isIntersecting && e.boundingClientRect.top < innerHeight), { threshold: 0 })
+    .observe(document.querySelector('.offer-card'));
   addEventListener('scroll', onScroll, {passive: true}); onScroll();
 
   form.addEventListener('submit', e => {

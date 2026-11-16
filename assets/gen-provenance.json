@@ -18,6 +18,14 @@
         "bmwm.webp",
         "amg.jpg (user-supplied reference photos)"
       ]
+    },
+    "gen-hero-mobile.jpg": {
+      "fal_request_id": "01a1e462-1a0c-78a3-be28-5f5c6a1abd4f",
+      "prompt_key": "emm-hero-mobile-a1",
+      "model": "google/nano-banana-2.1/edit",
+      "references": [
+        "gen-hero-trio master (4K)"
+      ]
     }
   },
   "origin": "synthetic",
@@ -27,6 +35,7 @@
   "prompts": {
     "gen-911.jpg": "Professional automotive studio photograph of a modern Porsche 911 Carrera (992 generation) in Guards Red, three-quarter front view from the left, standing on a dark polished concrete floor that shows a soft mirror reflection of the car. Background: a dark board-formed concrete wall with small tie holes, charcoal and near-black tones. Lighting: one large soft overhead key light from upper left sculpting the body lines, deep falloff into shadow, low-key, moody, high-end editorial car photography, natural colour, crisp detail, 50mm lens, camera at bumper height. The car occupies the central 55% of the frame with generous dark negative space above and around it. No license plate (smooth blank front bumper), no visible lettering, no badges with text, no logos, no watermark, no people.",
     "gen-amg.jpg": "Professional automotive studio photograph of a Mercedes-AMG GT coupe in matte graphite grey metallic, three-quarter front view from the right, standing on a dark polished concrete floor that shows a soft mirror reflection of the car. Background: a dark board-formed concrete wall with small tie holes, charcoal and near-black tones. Lighting: one large soft overhead key light from upper right sculpting the long hood and body lines, cool silver highlights, deep falloff into shadow, low-key, moody, high-end editorial car photography, natural colour, crisp detail, 50mm lens, camera at bumper height. The car occupies the central 55% of the frame with generous dark negative space above and around it. No license plate (smooth blank front bumper), no visible lettering, no badges with text, no logos, no watermark, no people.",
-    "gen-hero-trio.jpg": "Composite edit: dealer's F12 TDF studio (image 1), Ferrari removed; tight overlapping group at different angles: orange Mercedes-AMG GT Black Series front three-quarter as hero closest to camera, blue BMW M8 Competition behind-right facing the other way partly hidden, silver Porsche 911 Turbo S rear three-quarter behind-left; top 40% empty wall; plates removed."
+    "gen-hero-trio.jpg": "Composite edit: dealer's F12 TDF studio (image 1), Ferrari removed; tight overlapping group at different angles: orange Mercedes-AMG GT Black Series front three-quarter as hero closest to camera, blue BMW M8 Competition behind-right facing the other way partly hidden, silver Porsche 911 Turbo S rear three-quarter behind-left; top 40% empty wall; plates removed.",
+    "gen-hero-mobile.jpg": "Recompose the hero group as a 3:4 portrait for phones: same three cars, studio and light; tighter overlapping group filling ~92% width in the lower half (cars ~50-82% height, reflections below), top 45% empty wall; no plates/text."
   }
 }
