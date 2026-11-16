@@ -113,6 +113,7 @@ p{text-wrap:pretty}
 
 .top nav a{font-size:15px;font-weight:500;text-decoration:none;color:var(--muted);transition:color var(--dur) var(--ease)}
 .top nav a:hover{color:var(--text)}
+.top nav .cta,.top nav .cta:hover{color:#fff}
 
 /* ---------- hero ---------- */
 /* one studio frame: the cars stand on the floor, the form sits on their reflections,
@@ -163,31 +164,51 @@ p{text-wrap:pretty}
 .offer.is-done .fields{display:none}
 .offer.is-done .offer-done{display:flex}
 
-/* offer pop-up (header CTA): the same glass card on a dimmed, blurred page */
+/* offer drawer (header CTA): a full-height panel from the right — photo, the form in two groups, the action pinned */
 html:has(.omodal[open]){overflow:hidden}
-.omodal{width:min(560px,calc(100vw - 32px));max-width:none;max-height:calc(100svh - 32px);padding:0;border:0;background:transparent;color:var(--text);overflow:visible}
+.omodal{position:fixed;inset:0 0 0 auto;width:min(540px,100vw);height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;color:var(--text);overflow:hidden}
 .omodal::backdrop{background:rgba(6,6,7,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.omodal::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:34%;bottom:0;width:150%;height:420px;transform:translate(-50%,48%);background:radial-gradient(closest-side,rgb(var(--glow)/.95),rgb(var(--glow)/.4) 46%,rgb(var(--glow)/0))}
-.om-card{max-height:calc(100svh - 32px);overflow:auto;padding:var(--s6)}
-.om-card .offer-head{flex-direction:column;align-items:flex-start;gap:var(--s2);padding-right:var(--s8);margin-bottom:var(--s5)}
-.om-card .offer-head h2{font-size:clamp(24px,3vw,30px)}
-.om-card .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
-.om-card .fields .field:nth-child(5),.om-card .fields .btn{grid-column:1/-1}
-.om-x{position:absolute;top:var(--s4);right:var(--s4);width:44px;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line-strong);border-radius:var(--pill);background:transparent;color:var(--muted);cursor:pointer;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
-.om-x:hover{color:var(--text);border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06)}
+.omodal .om-card{height:100%;display:flex;flex-direction:column;padding:0;border-radius:0;border-width:0 0 0 1px;border-left-color:var(--line-strong);background:rgba(13,14,16,.94)}
+.om-photo{position:relative;flex:none;height:clamp(140px,24vh,250px);margin:0;overflow:hidden}
+.om-photo img{width:100%;height:100%;object-fit:cover;object-position:28% 38%;display:block;-webkit-mask:linear-gradient(#000 40%,transparent);mask:linear-gradient(#000 40%,transparent)}
+.om-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:0 var(--s7) var(--s5);margin-top:calc(var(--s7) * -1);position:relative}
+.om-body .offer-head{display:block;margin:0 0 var(--s6)}
+.om-body .offer-head h2{font-size:clamp(34px,4.2vw,46px);line-height:1;letter-spacing:-.015em}
+.om-body .offer-head p{display:block;margin-top:var(--s2);font-size:15px;line-height:1.5;max-width:40ch}
+.om-group{border:0;margin:0 0 var(--s5);padding:0;min-width:0}
+.om-group legend{padding:0;margin-bottom:var(--s2);font-size:14px;font-weight:500;color:var(--muted)}
+.om-group .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.om-group .field.wide{grid-column:1/-1}
+.om-foot{flex:none;display:grid;gap:var(--s3);padding:var(--s5) var(--s7) clamp(var(--s5),8vh,var(--s9));border-top:1px solid var(--line);background:rgba(13,14,16,.96)}
+.om-foot .btn{width:100%}
+.om-foot p{margin:0;display:flex;align-items:center;justify-content:center;gap:var(--s3);font-size:14px;color:var(--muted)}
+.om-x{position:absolute;z-index:2;top:var(--s5);right:var(--s5);width:44px;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line-strong);border-radius:var(--pill);background:rgba(6,6,7,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--text);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.om-x:hover{border-color:rgba(255,255,255,.5);background:rgba(6,6,7,.75)}
 .om-x svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
-.omodal.is-done .fields{display:none}
-.omodal.is-done .offer-done{display:flex;flex-direction:column;align-items:flex-start}
+.omodal .offer-done{display:none}
+.omodal.is-done :is(.om-group,.om-foot){display:none}
+.omodal.is-done .offer-done{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s5)}
 @media (prefers-reduced-motion:no-preference){
-  .omodal[open]{animation:om-in 560ms var(--m-ease-lift) both}
+  .omodal[open]{animation:om-in 640ms var(--m-ease-lift) both}
   .omodal[open]::backdrop{animation:om-fade 320ms var(--ease) both}
-  .omodal.is-closing{animation:om-out 220ms var(--ease) both}
-  .omodal.is-closing::backdrop{animation:om-fade 220ms var(--ease) reverse both}
+  .omodal[open] .om-photo img{animation:om-photo 1100ms var(--m-ease-lift) both}
+  .omodal[open] :is(.offer-head,.om-group){animation:om-rise 620ms var(--m-ease-lift) both}
+  .omodal[open] .offer-head{animation-delay:120ms}
+  .omodal[open] .om-group{animation-delay:200ms}
+  .omodal[open] .om-group + .om-group{animation-delay:260ms}
+  .omodal.is-closing{animation:om-out 280ms var(--m-ease-glide) both}
+  .omodal.is-closing::backdrop{animation:om-fade 280ms var(--ease) reverse both}
 }
-@keyframes om-in{from{opacity:0;transform:translateY(28px) scale(.98)}to{opacity:1;transform:none}}
-@keyframes om-out{to{opacity:0;transform:translateY(12px) scale(.99)}}
+@keyframes om-in{from{transform:translateX(100%)}to{transform:none}}
+@keyframes om-out{from{transform:none}to{transform:translateX(100%)}}
 @keyframes om-fade{from{opacity:0}to{opacity:1}}
-@media (max-width:560px){.om-card{padding:var(--s5)}.om-card .offer-head{padding-right:var(--s7)}}
+@keyframes om-photo{from{transform:scale(1.08)}to{transform:none}}
+@keyframes om-rise{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@media (max-width:560px){
+  .omodal .om-card{border-left-width:0}
+  .om-body{padding:0 var(--s5) var(--s5)}
+  .om-foot{padding:var(--s4) var(--s5) calc(var(--s4) + env(safe-area-inset-bottom))}
+}
 
 /* ---------- sections ---------- */
 section{position:relative}
@@ -749,21 +770,35 @@ main > section:not(.vbreak){position:relative;z-index:1}
 <dialog class="omodal" id="omodal" aria-labelledby="om-h">
   <form class="offer-card om-card" novalidate>
     <button class="om-x" type="button" data-mclose aria-label="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13"/></svg></button>
-    <div class="offer-head">
-      <h2 id="om-h">Get your offer</h2>
-      <p>Takes a minute. Prefer to talk? <a class="pill" href="tel:+18166088579">(816) 608-8579</a></p>
+    <figure class="om-photo" aria-hidden="true"><img src="assets/tdf-interior.jpg" alt="" width="1600" height="1067" loading="lazy" decoding="async"></figure>
+    <div class="om-body">
+      <div class="offer-head">
+        <h2 id="om-h" class="display">Get your offer</h2>
+        <p>Takes a minute. A specialist looks at your car against the current market and calls you.</p>
+      </div>
+      <fieldset class="om-group">
+        <legend>The car</legend>
+        <div class="fields">
+          <div class="field"><label for="m-year">Year</label><select id="m-year" name="year" required><option value="" selected disabled hidden></option></select></div>
+          <div class="field"><label for="m-make">Make</label><input id="m-make" name="make" list="makes" autocomplete="off" required></div>
+          <div class="field wide"><label for="m-model">Model</label><input id="m-model" name="model" autocomplete="off" required></div>
+        </div>
+      </fieldset>
+      <fieldset class="om-group">
+        <legend>Mileage and VIN</legend>
+        <div class="fields">
+          <div class="field"><label for="m-miles">Mileage</label><input id="m-miles" name="mileage" inputmode="numeric" required></div>
+          <div class="field"><label for="m-vin">VIN <span>(optional)</span></label><input id="m-vin" name="vin" maxlength="17" autocomplete="off" spellcheck="false"></div>
+        </div>
+      </fieldset>
+      <div class="offer-done" role="status">
+        <p><strong>Thanks, we have your car.</strong> A specialist will be in touch with next steps.</p>
+        <button class="btn btn-line" type="button" data-mreset>Add another car</button>
+      </div>
     </div>
-    <div class="fields">
-      <div class="field"><label for="m-year">Year</label><select id="m-year" name="year" required><option value="" selected disabled hidden></option></select></div>
-      <div class="field"><label for="m-make">Make</label><input id="m-make" name="make" list="makes" autocomplete="off" required></div>
-      <div class="field"><label for="m-model">Model</label><input id="m-model" name="model" autocomplete="off" required></div>
-      <div class="field"><label for="m-miles">Mileage</label><input id="m-miles" name="mileage" inputmode="numeric" required></div>
-      <div class="field"><label for="m-vin">VIN <span>(optional)</span></label><input id="m-vin" name="vin" maxlength="17" autocomplete="off" spellcheck="false"></div>
+    <div class="om-foot">
       <button class="btn btn-red" type="submit">Get my offer</button>
-    </div>
-    <div class="offer-done" role="status">
-      <p><strong>Thanks, we have your car.</strong> A specialist will be in touch with next steps.</p>
-      <button class="btn btn-line" type="button" data-mreset>Add another car</button>
+      <p>Prefer to talk? <a class="pill" href="tel:+18166088579">(816) 608-8579</a></p>
     </div>
   </form>
 </dialog>
@@ -790,7 +825,7 @@ main > section:not(.vbreak){position:relative;z-index:1}
   const now = new Date().getFullYear() + 1;
   for (let y = now; y >= 1960; y--) year.add(new Option(y, y));
 
-  // offer pop-up for the header CTA
+  // offer drawer for the header CTA
   const modal = document.getElementById('omodal');
   if (modal && modal.showModal) {
     const mForm = modal.querySelector('form');
@@ -804,12 +839,12 @@ main > section:not(.vbreak){position:relative;z-index:1}
       if (!modal.open || modal.classList.contains('is-closing')) return;
       if (reduce()) { modal.close(); return; }
       modal.classList.add('is-closing');
-      setTimeout(() => { modal.classList.remove('is-closing'); modal.close(); }, 220);
+      setTimeout(() => { modal.classList.remove('is-closing'); modal.close(); }, 280);
     };
     document.querySelectorAll('[data-modal]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openModal(a); }));
     modal.querySelector('[data-mclose]').addEventListener('click', closeModal);
     modal.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); });           // Esc
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });        // click outside the card
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });        // click on the backdrop
     mForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const bad = [...mForm.querySelectorAll('[required]')].find((f) => !f.value.trim());
